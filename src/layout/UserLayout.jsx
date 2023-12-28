@@ -10,14 +10,12 @@ export default function AuthLayout() {
   const token = localStorage.getItem('qv_token')
 
   const { auth, loading } = useAuth()
-  console.log(auth)
   
 
   if(loading) return 'Cargando!!!'
 
   return (
     <>
-      
         {token ? 
           <>
             <Header />

@@ -20,29 +20,19 @@ export default function CurriculumVitae() {
   
   const [avatar, setAvatar] = useState(null);
 
-
-  const id = localStorage.getItem('id')
-  console.log(id)
-
   const token = localStorage.getItem('qv_token') 
-  console.log(token)
-
 
   const uploadAvatar = async (event) => {
     const file = event.target.files[0];
-    console.log(file)
     
     if (file) {
       const urlImage = URL.createObjectURL(file); 
       setAvatar(urlImage);
     }
     
-    const username = 'kemuel';
-    const password = '111265014257684597846';
     const basicAuth = 'Basic ' + btoa(username + ':' + password);
-    
-    const url = `${import.meta.env.VITE_BACKEND_URL}/jsonapi/user/user/${id}/user_picture`; 
 
+    const url = `${import.meta.env.VITE_BACKEND_URL}/jsonapi/user/user/${id}/user_picture`; 
     try {
         const response = await axios.post(url, file, {
             headers: {
@@ -54,11 +44,8 @@ export default function CurriculumVitae() {
             }
         });
 
-      console.log('Archivo subido con éxito', response.data.data.attributes.drupal_internal__fid);
       await localStorage.setItem('img_fid', response.data.data.attributes.drupal_internal__fid);
 
-        // Actualizar el estado si es necesario, por ejemplo, para mostrar la imagen subida
-        // this.setState({ avatar: URL de la imagen subida });
     } catch (error) {
         console.error(error);
     }
@@ -66,22 +53,14 @@ export default function CurriculumVitae() {
 
 
   const [name, setName] = useState('');
-  console.log(name)
   const [lastName, setLastname] = useState(''); 
-  console.log(lastName)
   const [birth, setBirth] = useState('')
-  console.log(birth)
   const [idCard, setIdCard] = useState('')
-  console.log(idCard)
   const [cell, setCell] = useState('')
-  console.log(cell)
   const [alternativeMail, setAlternativeMail] = useState('')
-  console.log(alternativeMail)
   const [address, setAddress ] = useState('')
-  console.log(address)
   const [sector, setSector] = useState('')
-  console.log(sector)
-
+  
 
   const [province, setProvince] = useState('');
   const handleProvinceChange = (event) => {
@@ -89,19 +68,15 @@ export default function CurriculumVitae() {
     const selectedText = event.target.options[selectedIndex].text;
 
     setProvince(selectedText)
-    console.log(selectedText)
   }
-  console.log(province)
   
   const [country, setCountry] = useState('')
   const handleCountryChange = (event) => {
     const selectedIndex = event.target.selectedIndex;
     const selectedText = event.target.options[selectedIndex].text;
-
     setCountry(selectedText)
-    console.log(selectedText)
+
   }
-  console.log(country)
 
   const [hobbies, setHobbies] = useState([
     { name: 'Correr', value: false },
@@ -126,28 +101,21 @@ export default function CurriculumVitae() {
   };
 
   const hobbiesToSend = hobbies .filter(hobby => hobby.value)  .map(hobby => hobby.name);
-  console.log(hobbiesToSend)
-
   const firstHalfHobbies = hobbies.slice(0, hobbies.length / 2);
   const secondHalfHobbies = hobbies.slice(hobbies.length / 2);
-
 
   const [gender, setGender] = useState('')
 
   const handleGender = (event) => {
     setGender(event.target.value);
   };
-  console.log(gender)
-
 
   const [disability, setDisability] = useState('No')
 
   const handleDisability = () => {
     setDisability(prevState => prevState === 'No' ? 'Sí' : 'No');
   };
-  console.log(disability)
-
-
+ 
   const [softSkills, setSoftSkills] = useState([
     { name: 'Inteligencia Emocional', value: false },
     { name: 'Nivel de Urgencia', value: false },
@@ -171,22 +139,19 @@ export default function CurriculumVitae() {
   };
 
   const skillsToSend = softSkills .filter(skill => skill.value)  .map(skill => skill.name);
-  console.log(skillsToSend)
-
-
+  
   const [englishLevel, setEnglishLevel] = useState('')
 
   const handleEnglishLevel = (event) => {
     setEnglishLevel(event.target.value);
   };
-  console.log(englishLevel)
-
 
   const [otherLanguage, setOtherLanguage] = useState('');
 
   
-  const [profesion, setProfesion] = useState('')  
-   // Ingresando otra profesion
+  const [profesion, setProfesion] = useState('') 
+
+   
    const handleProfesionChange = (event) => {
     const selectedIndex = event.target.selectedIndex;
     const selectedText = event.target.options[selectedIndex].text;
@@ -199,24 +164,16 @@ export default function CurriculumVitae() {
       
       if(otherProfesion){
         setProfesion(otherProfesion)
-        console.log('Profesión ingresada:', otherProfesion);
       } 
 
     }else {
       setProfesion(selectedText)
-      console.log(selectedText)
     }
    
   };
-  console.log(profesion)
   
   const [yearExperience, setYearExperience] = useState(0)
-  console.log(yearExperience)
-
   const [objectives, setObjectives] = useState('')
-  console.log(objectives)
-
-
   const [references, setReferences] = useState([
     { nombre_completo_ref: '', telefono_ref: '', correo_ref: '' },
     { nombre_completo_ref: '', telefono_ref: '', correo_ref: '' }
@@ -228,7 +185,6 @@ export default function CurriculumVitae() {
     );
     setReferences(newReferences);
   };
-  console.log(references)
 
 // ================================================================================
   const [experiences, setExperiences] = useState([{}]);
@@ -237,7 +193,6 @@ export default function CurriculumVitae() {
   const [additionalStudies, setAdditionalStudies] = useState([{}])
 
 
-  // Agregar experiencia laboral
   const addCard = () => {
     const newCard = {
       id: Number  
@@ -257,11 +212,9 @@ export default function CurriculumVitae() {
     setExperiences(prevExperiences => prevExperiences.map(experience =>
       experience.id === id ? { ...experience, [key]: newValue } : experience
     ));
-  };
-  console.log(experiences)
-  
+  };  
 
-  // Agregar Grado
+  
   const addGrado = () => {
     const newCard = {
       id: Date.now(),
@@ -280,11 +233,8 @@ export default function CurriculumVitae() {
       grado.id === id ? { ...grado, [key]: value } : grado
     ));
   };
-  console.log(grados)
 
-
-
-   // Agregar Posgrado
+   
    const addPostgrado = () => {
     const newCard = {
       id: Date.now()
@@ -302,10 +252,8 @@ export default function CurriculumVitae() {
       postGrado.id === id ? { ...postGrado, [key]: value } : postGrado
     ));
   };
-  console.log(postgrados)
 
-
-  // Estudios adicionales
+  
   const addAdditionalStudies = () => {
     const newCard = {
       id: Date.now()
@@ -323,13 +271,9 @@ export default function CurriculumVitae() {
       addStudy.id === id ? { ...addStudy, [key]: value } : addStudy
     ));
   };
-  console.log(additionalStudies)
 
-   
- 
 
- 
-
+// Function to save cv form
   const handleSubmit = async (e) => {
     e.preventDefault()
     
@@ -337,10 +281,6 @@ export default function CurriculumVitae() {
     const token = localStorage.getItem('qv_token')
     const imgId = localStorage.getItem('img_fid')
     const username = localStorage.getItem('username')
-    console.log(id)
-    console.log(token)
-    console.log(imgId)
-    console.log(username)
     
       const headers = { 
           'Accept': 'application/vnd.api+json',
@@ -350,8 +290,7 @@ export default function CurriculumVitae() {
       }
 
     try {
-      
-      // Guardar el formulario 
+       
       const url = `${import.meta.env.VITE_BACKEND_URL}/webform_rest/submit?_format=json`
       const response = await axios.post(url, {
         "logged_user_uuid": id,
@@ -388,11 +327,10 @@ export default function CurriculumVitae() {
          "complementary_formation": additionalStudies,
          "work_personal_reference": references
      }, headers)
-      console.log(headers)
+
       alert("Los datos fueron guardados con exito")
-      console.log(response)
-      navigate('/user')
-      
+
+      navigate('/user') 
 
     } catch (error) {
       console.log(error)

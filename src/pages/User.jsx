@@ -4,7 +4,7 @@ import useAuth from "../hooks/useAuth"
 
 export default function User() {
   const { closeSesion, auth } = useAuth()
-  console.log(auth.field_fullname)
+  
   
   return (
     <>

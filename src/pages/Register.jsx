@@ -15,9 +15,9 @@ import useAuth from '../hooks/useAuth'
 
 export default function Register() {
 
-  const [ fullname, setFullName ] = useState('')
+  const [ name, setName ] = useState('')
+  const [ lastname, setLastname ] = useState('')
   const [ email, setEmail ] = useState('')
-  const [ user, setUser ] = useState('')
   const [ password, setPassword ] = useState('')
   const [ repetirPassword, setRepetirPassword ] = useState('')
   const [ googleRegister, setGoogleRegister ] = useState(true)
@@ -62,42 +62,23 @@ export default function Register() {
   },[])
 
   const onSuccess = async (response) => {
-    const { name, email, googleId, givenName, imageUrl } = response.profileObj
+    const { givenName, familyName, email, googleId, imageUrl } = response.profileObj
     
     try {
-      const url = `${import.meta.env.VITE_BACKEND_URL}/user/register?_format=json`;
+      const url = `${import.meta.env.VITE_BACKEND_URL}/api/register`;
       const response = await axios.post(url, {
-        "name":[{"value": givenName}],
-        "mail":[{"value": email}],
-        "field_fullname": [{"value": name}],
-        "pass":[{"value": googleId}],
-        "user_picture": [{"value": imageUrl}]
+        "name": givenName,
+        "lastname": familyName,
+        "mail": email,
+        "password": googleId,
+        "image": imageUrl
     })
-      console.log(response)
 
-      const urllogin = `${import.meta.env.VITE_BACKEND_URL}/user/login?_format=json`
-      const data = await axios.post(urllogin, 
-      {name:email, pass:googleId});
+
+      const urllogin = `${import.meta.env.VITE_BACKEND_URL}/api/login`
+      const data = await axios.post(urllogin, {name:email, pass:googleId});
       await localStorage.setItem('qv_token', data.data.csrf_token)
-      await localStorage.setItem('username', data.data.current_user.name)
-        
-
-      if(!data.data.csrf_token) return
-          
-      const config = {
-        headers: {
-          "Content-type": "application/json"                   
-        }
-      }   
-
-      const uri = `${import.meta.env.VITE_BACKEND_URL}/jsonapi/user/user?filter[name]=${data.data.current_user.name}`
-      const respuesta = await axios.get(uri, config)
-      await localStorage.setItem('id', response.data.data[0].id)
-      console.log(respuesta.data.data[0])
-      setAuth(respuesta.data.data[0].attributes)
-
       navigate('/user/register-cv')
-
 
     } catch (error) {
       setAlerta({msg: 'Ocurrio un error', error: true})
@@ -110,7 +91,6 @@ export default function Register() {
     setAlerta({msg: 'Ocurrio un error', error: true})
     
   }
-
 
 
 
@@ -135,40 +115,21 @@ export default function Register() {
 
     setAlerta({})
 
-    // Crear el usuario en el api
+   
     try {
-      const url = `${import.meta.env.VITE_BACKEND_URL}/user/register?_format=json`;
+      const url = `${import.meta.env.VITE_BACKEND_URL}/api/register`;
       const respuesta = await axios.post(url, {
-        "name":[{"value": user}],
-        "mail":[{"value": email}],
-        "field_fullname": [{"value": fullname}],
-        "pass":[{"value": password}],
-        "user_picture": [{"value":''}]
+        "name": name,
+        "lastname": lastname,
+        "mail": email,
+        "password": password,
+        "image": image
       })
-      console.log(respuesta)
     
-      const urllogin = `${import.meta.env.VITE_BACKEND_URL}/user/login?_format=json`
-      const  data  = await axios.post(urllogin, 
-        {name:email, pass:password});
-        await localStorage.setItem('qv_token', data.data.csrf_token) 
-        await localStorage.setItem('username', data.current_user.name)       
-        console.log(data)
-
-        if(!data.data.csrf_token) return
-
-        const config = {
-          headers: {
-            "Content-type": "application/json"                   
-          }
-        }   
-        
-      const uri = `${import.meta.env.VITE_BACKEND_URL}/jsonapi/user/user?filter[name]=${data.data.current_user.name}`
-        const response = await axios.get(uri, config)
-        console.log(response.data.data[0])
-        await localStorage.setItem('id', response.data.data[0].id)
-        setAuth(response.data.data[0].attributes)
-  
-        navigate('/user/register-cv')
+      const urllogin = `${import.meta.env.VITE_BACKEND_URL}/api/login`
+      const  data  = await axios.post(urllogin, {name:email, pass:password});
+      await localStorage.setItem('qv_token', data.data.csrf_token)           
+      navigate('/user/register-cv')
 
     } catch (error) {
       console.log(error)

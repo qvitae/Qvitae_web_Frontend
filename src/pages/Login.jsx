@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Alerts from '../components/Alerts'
-// import '../main'
 import GoogleLogin from 'react-google-login'
 import { gapi } from 'gapi-script'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -23,7 +22,7 @@ export default function Login() {
   const navigate = useNavigate()
 
 
-   // Autenticación con Google 
+   // Auth with Google 
   // eslint-disable-next-line react/prop-types
   const CustomGoogleLoginButton = ({ onClick }) => (
     
@@ -58,84 +57,17 @@ export default function Login() {
   },[])
 
   const onSuccess = async (response) => {
-    const { email, googleId, givenName } = response.profileObj
-    console.log(response.profileObj) 
-
+    const { email, googleId } = response.profileObj 
+    console.log(response.accessToken)
+    
     try {
-      const url = `${import.meta.env.VITE_BACKEND_URL}/user/login?_format=json`
-      const data = await axios.post(url, 
-      {name:email, pass:googleId});
-      await localStorage.setItem('qv_token', data.data.csrf_token)
-      await localStorage.setItem('username', data.data.current_user.name)
-      console.log(data)
-
-      if(!data.data.csrf_token) return
-          
-      const config = {
-        headers: {
-          "Content-type": "application/json"                   
-        }
-      }   
-
-      const uri = `${import.meta.env.VITE_BACKEND_URL}/jsonapi/user/user?filter[name]=${data.data.current_user.name}`
-      const response = await axios.get(uri, config)
-      await localStorage.setItem('id', response.data.data[0].id)
-      console.log(response.data.data[0])
-      setAuth(response.data.data[0].attributes)
-
+      const url = `${import.meta.env.VITE_BACKEND_URL}/api/login`
+      const data = await axios.post(url, {email, password:googleId});
+      await localStorage.setItem('qv_token', data.token)
       navigate('/user')
-
-    // Si no paso el login por google pero el usuario existe hago el siguiente flujo para loguearlo con google, 
-    // sino existe lo redirecciono a registrarse
+      
     } catch (error) {
-      console.log(error.response)
-      if(error.response){
-        try {
-
-          const basicAuth = 'Basic ' + btoa("basicAuthUser" + ':' + "U23vnSYBSd2RSbN.");
-
-          const configE = {
-            headers: {
-              "Authorization": basicAuth,
-              "Content-type": "application/json",                   
-            }
-          }
-          
-          const urlFilertUser = `${import.meta.env.VITE_BACKEND_URL}/jsonapi/user/user?filter[mail]=${email}`
-          const userExist = await axios.get(urlFilertUser, configE)
-          console.log(userExist.data.data)
-
-          if(userExist.data.data !== 0){ 
-            const urlToken = `${import.meta.env.VITE_BACKEND_URL}/session/token`
-            const sesionToken = await axios.get(urlToken)
-            console.log(sesionToken.data)
-            await localStorage.setItem('qv_token', sesionToken.data)
-            await localStorage.setItem('username', givenName)
-
-            if(!sesionToken.data) return
-          
-            const config = {
-              headers: {
-                "Content-type": "application/json"                   
-              }
-            }   
-
-            const uri = `${import.meta.env.VITE_BACKEND_URL}/jsonapi/user/user?filter[name]=${givenName}`
-            const response = await axios.get(uri, config)
-            await localStorage.setItem('id', response.data.data[0].id)
-            console.log(response.data.data[0])
-            setAuth(response.data.data[0].attributes)
-
-            navigate('/user')
-          
-          } else {
-            navigate('/register')
-          }
-        } catch (error) {
-          console.log(error.response)
-        }
-      }
-        
+      console.log(error.response)    
     }
   }
 
@@ -144,7 +76,7 @@ export default function Login() {
   }
 
 
-  // Autenticación con Qvitae
+  // Auth with Qvitae
   const handleSubmit = async e => {
     e.preventDefault();
 
@@ -157,28 +89,12 @@ export default function Login() {
     }
 
       try {
-        const url = `${import.meta.env.VITE_BACKEND_URL}/user/login?_format=json`
-        const { data } = await axios.post(url, 
-        {name:email, pass:password});
-        await localStorage.setItem('qv_token', data.csrf_token)
-        await localStorage.setItem('username', data.current_user.name)
-        console.log(data)
-
-        if(!data.csrf_token) return
-          
-        const config = {
-          headers: {
-            "Content-type": "application/json"                   
-          }
-        }   
-
-        const uri = `${import.meta.env.VITE_BACKEND_URL}/jsonapi/user/user?filter[name]=${data.current_user.name}`
-        const response = await axios.get(uri, config)
-        console.log(response.data.data[0])
-        await localStorage.setItem('id', response.data.data[0].id)
-        setAuth(response.data.data[0].attributes)
-
+        const url = `${import.meta.env.VITE_BACKEND_URL}/api/login`
+        const { data } = await axios.post(url, {email, password});
+        await localStorage.setItem('qv_token', data.token)
+        setAuth(data)
         navigate('/user')
+
       } catch (error) {
         console.log(error.response.data.message)
         setAlerta({
@@ -186,7 +102,6 @@ export default function Login() {
           error: true 
         })
       }
-    
   }
 
   const { msg } = alerta
@@ -214,6 +129,7 @@ export default function Login() {
                             onSuccess={onSuccess}
                             onFailure={onFailure}
                             cookiePolicy={'single_host_origin'}
+                            responseType='token'
                             render={(renderProps) => (
                             <CustomGoogleLoginButton onClick={renderProps.onClick} />
                           )}
