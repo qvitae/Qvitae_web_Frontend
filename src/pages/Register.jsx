@@ -97,7 +97,7 @@ export default function Register() {
   const handleSubmit = async e => {
     e.preventDefault();
 
-    if([fullname, email, user, password, repetirPassword].includes('')){
+    if([name, lastname, email, password, repetirPassword].includes('')){
       setAlerta({msg: 'Hay campos vacios', error: true})
       return 
     }
@@ -148,52 +148,6 @@ export default function Register() {
                   <p className='fs-4'>Qvitae te conecta con las mejores empresas que buscan tu perfil profesional !!!</p>
                 </div>
 
-                      {googleRegister ? (
-                        <div className="col-md mt-5 movil" >
-                          <div className={`card rounded bg-ligth movil`} >
-                            <div className='card-body'>
-
-                            { msg && <Alerts alerta={alerta} />}
-                              <form onClick={handleSubmit} >
-
-                              <GoogleLogin
-                              clientId={clientID}
-                              onSuccess={onSuccess}
-                              onFailure={onFailure}
-                              cookiePolicy={'single_host_origin'}
-                              render={(renderProps) => (
-                                <CustomGoogleLoginButton onClick={renderProps.onClick} />
-                              )}
-                              />
-
-                              <button className='facebook-button'>
-                                <FontAwesomeIcon icon={faFacebook} />{' '}
-                                FaceBook
-                              </button>
-
-                              <button className='snapchat-button'>
-                                <FontAwesomeIcon icon={faSnapchat} />{' '}
-                                Snapchat 
-                              </button>
-
-                              <button to={''} className="qv-button"
-                                onClick={() => setGoogleRegister(false)}
-                              >
-                              <img src="/images/QVITAE-LOGO.png" alt="Logo" className="img-qv-logo"/>{' '}
-                              Correo
-                              </button>
-
-                              </form>
-                              <nav className="w-100 text-center mt-5">
-                           
-                                <Link to={'/'} className="d-block my-3 text-decoration-none text-black bg-color-rosa fs-5">
-                                ¿Ya tienes una Cuenta? Inicia Sesión!
-                                </Link>
-                             </nav>
-                            </div>
-                          </div>
-                        </div>
-                      ) : (
                         <div className="col-md mt-5 movil" >
                           <div className={`card rounded bg-ligth movil`} >
                             <div className='card-body'>
@@ -201,13 +155,23 @@ export default function Register() {
                             { msg && <Alerts alerta={alerta} />}
                             <form onClick={handleSubmit} >
 
-                              <div className='my-3'>
+                                <div className='my-3'>
                                   <label htmlFor="" className='fs-5 text-uppercase fw-bold d-block'>
-                                    Nombre Completo
+                                    Nombre 
                                   </label>
-                                  <input type="text" placeholder='Tu Nombre y Apellido' className='border w-100 bg-light rounded p-2 mt-2' 
-                                  value={fullname}
+                                  <input type="text" placeholder='Tu Nombre' className='border w-100 bg-light rounded p-2 mt-2' 
+                                  value={name}
                                   onChange={(e) => setFullName(e.target.value)} 
+                                  />
+                                </div>
+
+                                <div className='my-3'>
+                                  <label htmlFor="" className='fs-5 text-uppercase fw-bold d-block'>
+                                    Apellido
+                                  </label>
+                                  <input type="text" placeholder='Tu Apellido' className='border w-100 bg-light rounded p-2 mt-2' 
+                                  value={lastname}
+                                  onChange={(e) => setUser(e.target.value)} 
                                   />
                                 </div>
                                 
@@ -218,16 +182,6 @@ export default function Register() {
                                   <input type="email" placeholder='Email de Registro' className='border w-100 bg-light rounded p-2 mt-2'  
                                   value={email}
                                   onChange={(e) => setEmail(e.target.value)} 
-                                  />
-                                </div>
-
-                                <div className='my-3'>
-                                  <label htmlFor="" className='fs-5 text-uppercase fw-bold d-block'>
-                                    Nombre de Usuario
-                                  </label>
-                                  <input type="text" placeholder='Tu Usuario' className='border w-100 bg-light rounded p-2 mt-2' 
-                                  value={user}
-                                  onChange={(e) => setUser(e.target.value)} 
                                   />
                                 </div>
 
@@ -252,17 +206,6 @@ export default function Register() {
                                 </div>
 
                                 <input type="submit" value={'Iniciar Sesión'} className='btn btn-secondary  text-white w-100 rounded py-2 mt-3 fs-5 fw-bold' />
-                                  
-
-                                <GoogleLogin
-                                  clientId={clientID}
-                                  onSuccess={onSuccess}
-                                  onFailure={onFailure}
-                                  cookiePolicy={'single_host_origin'}
-                                  render={(renderProps) => (
-                                    <CustomGoogleLoginButton onClick={renderProps.onClick} />
-                                  )}
-                                />
 
                             </form>
 
@@ -278,7 +221,7 @@ export default function Register() {
                             </div>
                           </div>
                         </div>
-                      )}
+                     
 
                       
                  
