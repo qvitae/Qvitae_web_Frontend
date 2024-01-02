@@ -1,0 +1,152 @@
+// abstracts
+@use './scss/abstracts/variables';
+@use './scss/abstracts/mixins';
+
+// base
+@use './scss/base/resets';
+@use './scss/base/base';
+
+.color-rosa {
+    color: #ff2db6;
+}
+
+.qv-pink-color {
+  background-color: #ff2db6;
+}
+
+.color-azul {
+    color: #0072e9
+}
+
+.bg-color-azul {
+    background-color: #0072e9;
+}
+
+
+.bg-color-rosa:hover {
+    background-color: #ff2db6;
+    border-radius: 3px;
+}
+
+.header {
+    background-color: #0072e9;
+}
+
+.img-qv-logo {
+  width: 32px;
+  height: 32px;
+}
+
+.img-logo {
+    width: 200px;
+    height: 200px;
+}
+
+.img-logo-user {
+  width: 120px;
+  width: 120px;
+}
+
+.facebook-button {
+  width: 100%;
+  background-color: #0072e9;
+  color: white;
+  border: none;
+  padding: 4px 4px;
+  border-radius: 0.25rem;
+  font-size: 1.25rem;
+  font-weight: bold; 
+  margin-top: 1rem;
+}
+
+.snapchat-button {
+  width: 100%;
+  background-color: #FFFE00;
+  color: black;
+  border: none;
+  padding: 4px 4px;
+  border-radius: 0.25rem;
+  font-size: 1.25rem;
+  font-weight: bold; 
+  margin-top: 1rem;
+}
+
+.qv-button {
+  width: 100%;
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 4px 4px;
+  border-radius: 0.25rem;
+  font-size: 1.25rem;
+  font-weight: bold; 
+  margin-top: 1rem;
+}
+
+
+.custom-button-close {
+  color: #ff2db6;
+  text-decoration: none;
+  font-size: 1.25rem; 
+  border: none;
+  background-color: transparent;
+  
+}
+
+.img-profile {
+  border-radius: 50%;
+}
+
+.boton-avatar {
+  width: 200px;
+}
+
+
+
+
+
+// =================
+html, body, #root {
+    height: 100%;
+    margin: 0;
+  }
+
+  .flex-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Establece la altura mínima del contenedor principal como el 100% de la ventana gráfica */
+  }
+  
+
+  main {
+    flex: 1; /* Hace que main ocupe el espacio restante */
+  }
+
+  .movil {
+    width: 75%;
+  }
+
+  @media only screen and (max-width: 992px) {
+    .movil {
+        width: 100% !important;
+    }
+  }
+
+  @media only screen and (max-width: 1200px) {
+    .movil-header {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  @media only screen and (max-width: 992px) {
+    .empujando-abajo {
+        margin-bottom: 25px;
+    }
+  }
+
+  @media screen and (max-width: 992px) { 
+    .submit-cv-b {
+      width: 100%;
+    }
+  }
