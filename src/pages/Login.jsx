@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import axios from 'axios'
 import Alerts from '../components/Alerts'
 import GoogleLogin from 'react-google-login'
@@ -18,9 +18,8 @@ export default function Login() {
   const [ googleLogin, setGoogleLogin ] = useState(true)
 
   const { setAuth } = useAuth()
-
   const navigate = useNavigate()
-
+  
 
    // Auth with Google 
   // eslint-disable-next-line react/prop-types
@@ -41,68 +40,58 @@ export default function Login() {
       onClick={onClick}
     >
       <FontAwesomeIcon icon={faGoogle} />{' '}
-      Login
+      Google
     </button>
   );
 
-  const clientID = `${import.meta.env.VITE_CLIENT_ID}`;
+ 
+
+  const handleGoogleLogin = () => {
+    window.location.href = `${import.meta.env.VITE_BACKEND_URL}/api/login/google`;
+  }
+
 
   useEffect(() => {
-    const start = () => {
-      gapi.auth2.init({
-        clientId: clientID
-      })
-    }
-    gapi.load("client:auth2", start)
-  },[])
+    const searchParams = new URLSearchParams(location.search);
+    const token = searchParams.get('token');
 
-  const onSuccess = async (response) => {
-    const { email, googleId } = response.profileObj 
-    console.log(response.accessToken)
-    
-    try {
-      const url = `${import.meta.env.VITE_BACKEND_URL}/api/login`
-      const data = await axios.post(url, {email, password:googleId});
-      await localStorage.setItem('qv_token', data.token)
-      navigate('/user')
-      
-    } catch (error) {
-      console.log(error.response)    
+    if (token) {
+      localStorage.setItem('qv_token', token);
+      navigate('/user'); // Redirige al componente User
     }
-  }
+  },[navigate])
 
-  const onFailure = () => {
-    console.log('Ocurrio un error')
-  }
+
 
 
   // Auth with Qvitae
   const handleSubmit = async e => {
     e.preventDefault();
 
-    if([email, password].includes('')){
-      setAlerta({
-        msg: 'Todos los campos son obligatorios',
-        error: true
-      })
-      return 
-    }
+    // if([email, password].includes('')){
+    //   setAlerta({
+    //     msg: 'Todos los campos son obligatorios',
+    //     error: true
+    //   })
+    //   return 
+    // }
 
-      try {
-        const url = `${import.meta.env.VITE_BACKEND_URL}/api/login`
-        const { data } = await axios.post(url, {email, password});
-        await localStorage.setItem('qv_token', data.token)
-        setAuth(data)
-        navigate('/user')
+    //   try {
+    //     const url = `${import.meta.env.VITE_BACKEND_URL}/api/login`
+    //     const { data } = await axios.post(url, {email, password});
+    //     await localStorage.setItem('qv_token', data.token)
+    //     setAuth(data)
+    //     navigate('/user')
 
-      } catch (error) {
-        console.log(error.response.data.message)
-        setAlerta({
-          msg: error.response.data.message,
-          error: true 
-        })
-      }
+    //   } catch (error) {
+    //     console.log(error.response.data.message)
+    //     setAlerta({
+    //       msg: error.response.data.message,
+    //       error: true 
+    //     })
+    //   }
   }
+
 
   const { msg } = alerta
 
@@ -123,18 +112,9 @@ export default function Login() {
       
                   
                           <form  onClick={handleSubmit} >
-                                                      
-                          <GoogleLogin                   
-                            clientId={clientID}                 
-                            onSuccess={onSuccess}
-                            onFailure={onFailure}
-                            cookiePolicy={'single_host_origin'}
-                            responseType='token'
-                            render={(renderProps) => (
-                            <CustomGoogleLoginButton onClick={renderProps.onClick} />
-                          )}
-                          />
-
+                                              
+                          <CustomGoogleLoginButton onClick={handleGoogleLogin} />
+                         
                           <button className='facebook-button'>
                             <FontAwesomeIcon icon={faFacebook} />{' '}
                             FaceBook 
@@ -154,7 +134,7 @@ export default function Login() {
                     </form>
                     <nav className="w-100 text-center mt-5">
                         <Link to={'/register'} className="d-block my-3 text-decoration-none text-black bg-color-rosa fs-5">
-                        No te has registrado? Haz click aquí!
+                        Registrarse con otra cuenta, click aquí!
                         </Link>
                       </nav>
                     </div>
@@ -189,20 +169,11 @@ export default function Login() {
 
                           <input type="submit" value={'Iniciar Sesión'} className='btn btn-secondary  text-white w-100 rounded py-2 mt-3 fs-5 fw-bold' />
 
-                          <GoogleLogin   
-                          google                
-                          clientId={clientID}                 
-                          onSuccess={onSuccess}
-                          onFailure={onFailure}
-                          cookiePolicy={'single_host_origin'}
-                          render={(renderProps) => (
-                            <CustomGoogleLoginButton onClick={renderProps.onClick} />
-                          )}
-                          />
+                          <CustomGoogleLoginButton onClick={handleGoogleLogin} />
                         </form>
                       <nav className="w-100 text-center mt-5">
                         <Link to={'/register'} className="d-block my-3 text-decoration-none text-black bg-color-rosa fs-5">
-                        No te has registrado? Haz click aquí!
+                        Registrarse con otra cuenta, click aquí!
                         </Link>
 
                         
