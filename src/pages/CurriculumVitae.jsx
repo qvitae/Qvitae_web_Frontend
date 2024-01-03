@@ -1,20 +1,18 @@
 /* eslint-disable no-undef */
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { MDBAccordion, MDBAccordionItem, MDBIcon, MDBRow, MDBCol, MDBFile, MDBInput, MDBSwitch,MDBTextArea,MDBTable, MDBCard, MDBCardBody, MDBBtn, MDBRadio } from 'mdb-react-ui-kit';
-import Form from 'react-bootstrap/Form';
 
-import DataPicker from '../components/DataPicker';
+import FormProvider from '../context/CvFormProvider'
+import PersonalInfo from '../components/formComponents/PersonalInfo';
+
+import axios from 'axios';
 
 import useAuth from "../hooks/useAuth"
-
-
+import ExperienceInfo from '../components/formComponents/ExperienceInfo';
 
 
 export default function CurriculumVitae() {
 
-  
  
 
   return (
@@ -32,14 +30,18 @@ export default function CurriculumVitae() {
             </Link>
             <button type="button"  
               className="custom-button-close"
-              onClick={closeSesion}
+              // onClick={closeSesion}
             >
               Cerrar Sesión
             </button>
           </nav>
         </div>
-          
-         
+        
+        <FormProvider>
+          <PersonalInfo/>
+          <ExperienceInfo/>
+        </FormProvider>
+
       </main>
     </>
     

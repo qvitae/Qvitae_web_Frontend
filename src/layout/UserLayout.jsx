@@ -16,14 +16,14 @@ export default function AuthLayout() {
 
   return (
     <>
-        {token ? 
-          <>
             <Header />
               <Outlet />
             <Footer /> 
+        {/*token ? 
+          <>
           </>
           : < Navigate to={'/'} />
-        }
+        */}
        
     </>
    

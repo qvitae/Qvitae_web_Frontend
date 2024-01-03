@@ -1,0 +1,348 @@
+<MDBAccordion>
+            <MDBAccordionItem collapseId={1} headerTitle={<><MDBIcon fas icon="question-circle" /> &nbsp; Experiencia laboral</>}>
+            
+
+            <div className='row pt-3 '>
+
+              <div className='col-md-4 empujando-abajo'>
+                  <MDBCol>
+
+                    <MDBRow>
+
+                      <MDBCol>
+                        <div className='fs-5'>Habilidades Blandas</div>
+                        <br />
+                        
+                          {softSkills.map((skill, index) => (
+                            <div key={index}>
+                              <MDBSwitch 
+                                
+                                id={`flexSwitchCheckDefault${index}`} 
+                                label={skill.name} 
+                                checked={skill.value} // Asegúrate de que el estado del switch refleje el valor actual de la habilidad
+                                onChange={() => handleSoftSkillsChange(skill.name)} 
+                              />
+                              <br />
+                            </div>
+                          ))}
+                       
+                        <br />
+                        <div className='fs-5'>Nivel de Inglés</div>
+                        <br />
+                        <MDBRadio name='flexRadioDefault' id='flexRadioDefault1' label='No Hablo Inglés' value="No Hablo Inglés" onChange={handleEnglishLevel} />
+                        <br />
+                        <MDBRadio name='flexRadioDefault' id='flexRadioDefault1' label='Inglés Básico' value="Inglés Básico" onChange={handleEnglishLevel} />
+                        <br />
+                        <MDBRadio name='flexRadioDefault' id='flexRadioDefault1' label='Inglés Medio' value="Inglés Medio"  onChange={handleEnglishLevel} />
+                        <br />
+                        <MDBRadio name='flexRadioDefault' id='flexRadioDefault1' label='Inglés Profesional' value="Inglés Profesional" onChange={handleEnglishLevel} />
+                        <br />
+                        <MDBInput label='Otro Idioma' placeholder='Alemán, Italiano, Francés' id='form1' type='text' 
+                          value={otherLanguage} onChange={(e) => setOtherLanguage(e.target.value)}
+                        />
+                      </MDBCol>
+                      
+                    </MDBRow>
+                  </MDBCol>
+              </div>
+
+              <div className='col-md-8'>
+                  <MDBCol>
+
+                    <MDBRow className='mb-5'>
+                      <MDBCol lg="4" className='mb-3'>
+                        <Form.Select onChange={handleProfesionChange}>
+                          <option>Profesión</option>
+                          <option value="1">  Ingenieria en Sistemas </option>
+                          <option value="2">	Tecnólogo en Software  </option>
+                          <option value="3">	Tecnólogo en Redes </option>
+                          <option value="4">	Tecnólogo en Seguridad Informática </option>
+                          <option value="5">	DISTRITO NACIONAL </option>
+                          <option value="6">	Administrador de Bases de Datos </option>
+                          <option value="7">	Arquitecto </option>
+                          <option value="8">	Ingeniero Eléctrico, Electromecánico, Robótica </option>
+                          <option value="9">	Ingeniero Civil </option>
+                          <option value="10">	Ingeniero Industrial </option>
+                          <option value="11">	Medicina </option>
+                          <option value="12">	Bío-Analista </option>
+                          <option value="13">	Enfermería </option>
+                          <option value="14">	Contabilidad Finanzas </option>
+                          <option value="15">	Administrador de Empresas </option>
+                          <option value="16">	Relaciones Internacionales </option>
+                          <option value="17">	Hotelería y Turismo </option>
+                          <option value="18">	Mercadeo </option>
+                          <option value="19">	Maestro </option>
+                          <option value="20">	Psicología </option>
+                          <option value="21">	Abogado </option>
+                          <option value="22">	Asistente </option>
+                          <option value="23">	Secretaria </option>
+                          <option value="24">	Chofer </option>
+                          <option value="25">	Otro </option>
+                        </Form.Select>
+                      </MDBCol>
+
+                      <MDBCol lg="4">
+                        <MDBInput label='Años de Experiencia' id='typeNumber' type='number' 
+                          value={yearExperience} onChange={(e) => setYearExperience(e.target.value)}
+                        />
+                      </MDBCol>
+
+                    </MDBRow>
+
+                    <MDBRow className='mb-4'>
+                      <MDBCol>
+                        <MDBTextArea label='Objetivos' id='textAreaExample' rows={4} 
+                          value={objectives} onChange={(e) => setObjectives(e.target.value)}
+                        />
+                      </MDBCol>
+                    </MDBRow>
+
+                    <MDBRow className='mb-4'>
+                      <MDBCol>
+                        <div className='fs-5'>
+                          Trabajos Recientes
+                        </div>
+                        <br />
+                        <div>
+                          {experiences.map((experience) => (
+                            <MDBCard key={experience.id} className='mb-3'>
+                            <MDBCardBody>
+                              <MDBTable>  
+                                <MDBInput label='Posición' id='form1' type='text' 
+                                  value={experience.position} onChange={(e) => handleExperience(experience.id, 'work_position', e.target.value)}
+                                />
+                                <br />
+                                <MDBInput label='Nombre de la Empresa' id='form1' type='text' 
+                                  value={experience.companyName} onChange={(e) => handleExperience(experience.id, 'work_company_name', e.target.value)}
+                                />
+                                <br />
+                                <MDBTextArea label='Descripción del Puesto' id='textAreaExample' rows={4} 
+                                  value={experience.description} onChange={(e) => handleExperience(experience.id, 'work_description', e.target.value)}
+                                />
+                                <br />
+                                <MDBRow>
+                                  <MDBCol>
+                                    <DataPicker label='Fecha de Inicio' 
+                                      value={experience.stardDate} onChange={(e) => handleExperience(experience.id, 'work_start_date', e.target.value)}
+                                    />
+                                  </MDBCol>
+                                  <MDBCol>
+                                    <DataPicker label='Fecha de Fin'
+                                      value={experience.endDate} onChange={(e) => handleExperience(experience.id, 'work_end_date', e.target.value)}
+                                    />
+                                  </MDBCol>
+                                </MDBRow>
+                                
+                                <MDBRow className='mx-4'>
+                                  <MDBCol className='mb-2'>
+                                    <MDBSwitch id='flexSwitchCheckDefault' label="Trabajando Actualmente" 
+                                      checked={experience.currentlyWorking === "1"} 
+                                      onChange={(e) => handleExperience(experience.id, 'currentlyWorking', e.target.checked)}
+                                    />
+                                  </MDBCol>
+                                </MDBRow>
+                                <MDBCol>
+                                  <MDBBtn onClick={() => removeCard(experience.id)} className='ms-2'>x</MDBBtn>
+                                </MDBCol>
+                                
+                                
+                              </MDBTable>
+                            </MDBCardBody>
+                          </MDBCard>
+                          ))}
+
+                          <MDBBtn onClick={addCard}>Agregar Experiencia</MDBBtn>
+                        </div>
+                      </MDBCol>
+                    </MDBRow>
+
+                    <MDBRow>
+                      <MDBCol>
+                        <div className='fs-5'>
+                          Referencia Personal o Laboral
+                        </div>
+                        <br />
+                     
+                       
+                          {references.map((reference, index) => (
+                            // eslint-disable-next-line react/jsx-key
+                            <div key={index}>
+                              <MDBCard className='mb-3' >
+                                <MDBCardBody>
+
+                                  <MDBRow>
+                                    <MDBCol lg="4" className='mb-3'>
+                                      <MDBInput label='Nombre y Apellido' id={`form1-fullname-${index}`} type='text'
+                                        value={reference.fullname}
+                                        onChange={(e) => handleReference(index, 'nombre_completo_ref', e.target.value)} />
+                                    </MDBCol>
+                                    <br />
+                                    <MDBCol lg="4" className='mb-3'>
+                                      <MDBInput label='Teléfono' id={`form1-phone-${index}`} type='tel'
+                                        value={reference.phone}
+                                        onChange={(e) => handleReference(index, 'telefono_ref', e.target.value)} />
+                                    </MDBCol>
+                                    <br />
+                                    <MDBCol>
+                                      <MDBInput label='Correo' id={`form1-email-${index}`} type='email'
+                                        value={reference.email}
+                                        onChange={(e) => handleReference(index, 'correo_ref', e.target.value)} />
+                                    </MDBCol>
+                                  </MDBRow>
+
+                                </MDBCardBody>
+                                </MDBCard>
+                              
+                            </div>
+                        ))}
+                       
+                         
+                      </MDBCol>
+                    </MDBRow>
+
+                  </MDBCol>
+              </div>
+            </div>
+            </MDBAccordionItem>
+          </MDBAccordion>
+
+          <br />
+          <MDBAccordion>
+            <MDBAccordionItem collapseId={1} headerTitle={<><MDBIcon fas icon="question-circle" /> &nbsp; Educación</>}>
+             
+            <MDBRow className='mb-4'>
+              <MDBCol>
+                <div className='fs-5 pt-3'>
+                  Carrera de Grado
+                </div>
+                <br />
+                <div>
+                  {grados.map((grado) => (
+                    <div key={grado.id}>
+                      <MDBCard className='mb-3'>
+                        <MDBCardBody>
+                          
+                            <MDBRow>
+                              <MDBCol lg="4" className='mb-3'>
+                                <MDBInput label='Profesión' id='form1' type='text' 
+                                  value={grado.profesion}
+                                  onChange={(e) => handleGrado(grado.id, 'profession_career', e.target.value)}
+                                />
+                              </MDBCol>
+                              <MDBCol lg="4" className='mb-3'>
+                                <MDBInput label='Academia' id='form1' type='text' 
+                                  value={grado.academia}
+                                  onChange={(e) => handleGrado(grado.id, 'academy', e.target.value)}
+                                />
+                              </MDBCol>
+                              <MDBCol lg="4" className='mb-3'>
+                                <DataPicker 
+                                  value={grado.endDate} 
+                                  onChange={(e) => handleGrado(grado.id, 'date', e.target.value)}
+                                />
+                              </MDBCol>
+                            </MDBRow>
+                            <MDBBtn onClick={() => removeGrado(grado.id)}>x</MDBBtn>
+                        </MDBCardBody> 
+                      </MDBCard>
+                      
+                    </div>
+                  ))}
+                  <MDBBtn onClick={addGrado}>Agregar Carrera</MDBBtn>
+                </div>
+              </MDBCol>
+            </MDBRow>
+
+            <MDBRow className='mb-4'>
+              <MDBCol>
+                <div className='fs-5 pt-3'>
+                  Postgrado/Maestría
+                </div>
+                <br />
+                <div>
+                  {postgrados.map((postgrado) => (
+                    <div key={postgrado.id}>
+                      <MDBCard className='mb-3'>
+                        <MDBCardBody>
+                          
+                            <MDBRow>
+                              <MDBCol lg="4" className='mb-3'>
+                                <MDBInput label='Maestría' id='form1' type='text' 
+                                  value={postgrado.maestria}
+                                  onChange={(e) => handlePostGrado(postgrado.id, 'maestria', e.target.value)}
+                                />
+                              </MDBCol>
+                              <MDBCol lg="4" className='mb-3'>
+                                <MDBInput label='Academia' id='form1' type='text' 
+                                   value={postgrado.academia}
+                                   onChange={(e) => handlePostGrado(postgrado.id, 'academia', e.target.value)}
+                                />
+                              </MDBCol>
+                              <MDBCol lg="4" className='mb-3'>
+                                <DataPicker 
+                                  value={postgrado.endDate}
+                                  onChange={(e) => handlePostGrado(postgrado.id, 'endDate', e.target.value)}
+                                />
+                              </MDBCol>
+                            </MDBRow>
+                            <MDBBtn onClick={() => removePostgrado(postgrado.id)}>x</MDBBtn>
+                        </MDBCardBody> 
+                      </MDBCard>
+                      
+                    </div>
+                  ))}
+                  <MDBBtn onClick={addPostgrado}>Agregar Maestría</MDBBtn>
+                </div>
+              </MDBCol>
+            </MDBRow>
+
+            <MDBRow>
+              <MDBCol>
+                <div className='fs-5 pt-3'>
+                  Formación Complementaria
+                </div>
+                <br />
+                <div>
+                  {additionalStudies.map((additionalStudy) => (
+                    <div key={additionalStudy.id}>
+                      <MDBCard className='mb-3'>
+                        <MDBCardBody>
+                          
+                            <MDBRow>
+                              <MDBCol lg="4" className='mb-3'>
+                                <MDBInput label='Curso' id='form1' type='text' 
+                                  value={additionalStudy.curso}
+                                  onChange={(e) => handleAddStudies(additionalStudy.id, 'curso', e.target.value)}
+                                />
+                              </MDBCol>
+                              <MDBCol lg="4" className='mb-3'>
+                                <MDBInput label='Academia' id='form1' type='text' 
+                                  value={additionalStudy.academia}
+                                  onChange={(e) => handleAddStudies(additionalStudy.id, 'academia', e.target.value)}
+                                />
+                              </MDBCol>
+                              <MDBCol lg="4" className='mb-3'>
+                                <DataPicker 
+                                  value={additionalStudy.endDate}
+                                  onChange={(e) => handleAddStudies(additionalStudy.id, 'endDate', e.target.value)}
+                                />
+                              </MDBCol>
+                            </MDBRow>
+                            <MDBBtn onClick={() => removeAdditionalStudies(additionalStudy.id)}>x</MDBBtn>
+                        </MDBCardBody> 
+                      </MDBCard>
+                      
+                    </div>
+                  ))}
+                  <MDBBtn onClick={addAdditionalStudies}>Agregar Formación</MDBBtn>
+                </div>
+              </MDBCol>
+            </MDBRow>
+
+            </MDBAccordionItem>
+          </MDBAccordion>
+          <br />
+          {/* <input type="submit" value={'Guardar'} className='btn btn-secondary  text-white w-100 rounded py-2 mt-3 fs-5 fw-bold bg-color-rosa' /> */}
+          <div className='d-flex justify-content-end'>
+            <MDBBtn type='submit' className='submit-cv-b'>Guardar</MDBBtn>
+          </div>
