@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext } from "react";
-import axios from "axios";
+import { customFetch } from "../helpers/fetchers";
 
 
 const AuthContext = createContext()
@@ -11,24 +11,10 @@ const AuthProvider = ({ children }) => {
     const [ auth, setAuth ] = useState({})
 
     useEffect(() => {
-        const authenticateUser = async () => {
-            const token = localStorage.getItem('qv_token')
-            
-            if(!token){
-                setLoading(false)
-                return 
-            }
-
-            const config = {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,                  
-              }
-            }
-  
+        const authenticateUser = async () => {  
             try {
                 const url = `${import.meta.env.VITE_BACKEND_URL}/api/user`
-                const { data } = await axios.get(url, config)
+                const data = await customFetch(url)
                 setAuth(data)
                 console.log(data)
             

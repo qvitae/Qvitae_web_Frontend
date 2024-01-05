@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import axios from "axios"
 import Alerts from "../components/Alerts"
 // import '../main'
 import GoogleLogin from 'react-google-login'
@@ -12,6 +11,7 @@ import { faGoogle, faFacebook, faSnapchat } from '@fortawesome/free-brands-svg-i
 
 import useAuth from '../hooks/useAuth'
 import { jwtDecode } from "jwt-decode"
+import { customFetch } from "../helpers/fetchers"
 
 
 export default function Register() {
@@ -51,15 +51,15 @@ export default function Register() {
 
     try {
       const url = `${import.meta.env.VITE_BACKEND_URL}/api/register`;
-      const response = await axios.post(url, {
+      const data = await customFetch(url, {method: 'POST', withToken: false} ,JSON.stringify({
         "name": name,
         "lastname": lastname,
         "email": email,
         "password": password,
-      })
-      console.log(response.data)
-      if(response.data){
-        localStorage.setItem('qv_token', response.data)
+      }))
+      console.log(data)
+      if(data){
+        localStorage.setItem('qv_token', data)
         navigate('/user/register-cv')
       }
     
