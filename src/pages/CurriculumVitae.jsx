@@ -666,8 +666,8 @@ export default function CurriculumVitae() {
                         </div>
                         <br />
                         <div>
-                          {experiences.map((experience) => (
-                            <MDBCard key={experience.id} className='mb-3'>
+                          {experiences.map((experience, index) => (
+                            <MDBCard key={index} className='mb-3'>
                             <MDBCardBody>
                               <MDBTable>  
                                 <MDBInput label='Posición' id='form1' type='text' 
@@ -779,8 +779,8 @@ export default function CurriculumVitae() {
                 </div>
                 <br />
                 <div>
-                  {grados.map((grado) => (
-                    <div key={grado.id}>
+                  {grados.map((grado, index) => (
+                    <div key={index}>
                       <MDBCard className='mb-3'>
                         <MDBCardBody>
                           
@@ -822,8 +822,8 @@ export default function CurriculumVitae() {
                 </div>
                 <br />
                 <div>
-                  {postgrados.map((postgrado) => (
-                    <div key={postgrado.id}>
+                  {postgrados.map((postgrado, index) => (
+                    <div key={index}>
                       <MDBCard className='mb-3'>
                         <MDBCardBody>
                           
@@ -865,8 +865,8 @@ export default function CurriculumVitae() {
                 </div>
                 <br />
                 <div>
-                  {additionalStudies.map((additionalStudy) => (
-                    <div key={additionalStudy.id}>
+                  {additionalStudies.map((additionalStudy, index) => (
+                    <div key={index}>
                       <MDBCard className='mb-3'>
                         <MDBCardBody>
                           
