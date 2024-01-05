@@ -1,35 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { MDBAccordion, MDBAccordionItem, MDBIcon, MDBRow, MDBCol, MDBFile, MDBInput, MDBSwitch,MDBTextArea,MDBTable, MDBCard, MDBCardBody, MDBBtn, MDBRadio } from 'mdb-react-ui-kit';
+import React from "react";
+import { MDBAccordion, MDBAccordionItem, MDBRow, MDBCol, MDBFile, MDBInput, MDBSwitch,MDBTextArea,MDBTable, MDBCard, MDBCardBody, MDBBtn, MDBRadio } from 'mdb-react-ui-kit';
 
 import DataPicker from '../../components/DataPicker';
-import { actions, useFormData } from "../../context/CvFormProvider";
+import { actions } from "../../context/CvFormProvider";
+import { useFormData } from "../../hooks/useFormData";
 import AddressForm from "./AddressForm";
-
-  const availableHobbies = [
-      "Correr",
-      "Nadar",
-      "Gimnasio",
-      "Leer",
-      "Cantar",
-      "Teatro",
-      "Bicicleta",
-      "Equitación",
-      "Cocinar",
-      "Ver TV",
-      "Ir al Cine",
-      "Ir de Compras",
-      "Tocar Instrumento"
-    ];
-    
-
   
 
-export default function PersonalInfo() {
+export default function PersonalInfo({availableHobbies, isLoading, countries = []}) {
 
   let avatar = false
   const {formState, formDataManager} = useFormData(),
-      {name, lastName, personalData, address:totalAddress, hobbies} = formState,
-      {birth_date, identification_id, phoneNumber ,alternativeEmail, handicapped, gender} = personalData
+      {name, lastName, personalData, hobbies} = formState,
+      {birthDate, identificationId, phoneNumber ,alternativeEmail, handicapped, gender} = personalData
 
 
   const toggleDisability = () => 
@@ -44,7 +27,7 @@ export default function PersonalInfo() {
   
 
   return (<MDBAccordion>
-      <MDBAccordionItem collapseId={1} headerTitle={<><MDBIcon fas icon="question-circle" /> &nbsp; Información personal 
+      <MDBAccordionItem collapseId={1} headerTitle={<><i className="icon bi-person text-primary" /> &nbsp; Información personal 
       </>}>
       <div className='row pt-3'>
         <div className='col-12 col-md-3 d-flex justify-content-center flex-wrap'>
@@ -79,23 +62,27 @@ export default function PersonalInfo() {
           <MDBCol className="w-100 col-12 col-md-3" style={{maxHeight: '50%', overflowY: 'scroll'}}>  
             <div className='fs-5'>Pasatiempo</div>
             <br />
-            {availableHobbies.map((hobby, index) => (
-              <div key={index}>
-                <MDBSwitch 
-                  id={`hobbySwitch${index}`}
-                  label={hobby}
-                  checked={hobbies.find(hobby => hobby.hobbyId === index)}
-                  onChange={e => {
-                    if (e.target.checked) {
-                      formDataManager({type: actions.addHobby, hobbyId: index})
-                    }else {
-                      formDataManager({type: actions.removeHobby, hobbyId: index})
-                    }
-                  }}
-                />
-                <br />
-              </div>
-            ))}
+            {isLoading? 
+              <h2 className="text-center">Cargando...</h2>
+              :
+              availableHobbies?.map(hobby => (
+                <div key={hobby.id}>
+                  <MDBSwitch 
+                    id={`hobbySwitch${hobby.id}`}
+                    label={hobby.name}
+                    checked={hobbies.find(userHobby => userHobby.hobbyId === hobby.id)}
+                    onChange={e => {
+                      if (e.target.checked) {
+                        formDataManager({type: actions.addHobby, hobbyId: hobby.id})
+                      }else {
+                        formDataManager({type: actions.removeHobby, hobbyId: hobby.id})
+                      }
+                    }}
+                  />
+                  <br />
+                </div>
+              ))
+            }
           </MDBCol>
         </div>
 
@@ -115,7 +102,7 @@ export default function PersonalInfo() {
               </MDBCol>
               <MDBCol lg="4">
                 <DataPicker 
-                  value={birth_date || new Date()} onChange={(e) => changeSomePersonalData({birth_date: e.target.value})}
+                  value={birthDate} onChange={(e) => changeSomePersonalData({birthDate: e.target.value})}
                 />
               </MDBCol>
             </MDBRow>
@@ -123,22 +110,22 @@ export default function PersonalInfo() {
             <MDBRow className='mb-5'>
               <MDBCol lg="4" className='mb-3'>
                 <MDBInput label='Cédula' id='typeText' type='text' 
-                  value={identification_id || ''} onChange={(e) => changeSomePersonalData({identification_id: e.target.value})}
+                  value={identificationId || ''} onChange={(e) => changeSomePersonalData({identificationId: e.target.value})}
                 />
               </MDBCol>
               <MDBCol lg="4" className='mb-3'>
                 <MDBInput label='Teléfono' id='typeText' type='text ' 
-                  value={phoneNumber || ''} onChange={(e) => changeSomePersonalData({phone_number: e.target.value})}
+                  value={phoneNumber || ''} onChange={(e) => changeSomePersonalData({phoneNumber: e.target.value})}
                 />
               </MDBCol>
               <MDBCol lg="4">
                 <MDBInput label='Otro correo' id='typeEmail' type='email' 
-                  value={alternativeEmail || ''} onChange={(e) => changeSomePersonalData({alternative_email: e.target.value})}
+                  value={alternativeEmail || ''} onChange={(e) => changeSomePersonalData({alternativeEmail: e.target.value})}
                 />
               </MDBCol>
             </MDBRow>
 
-            <AddressForm/>
+              <AddressForm countries={countries}/>
 
             <MDBRow>
               <MDBCol>  

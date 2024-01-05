@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react"
-import { useFormData } from "../../context/CvFormProvider";
 import { MDBRow, MDBCol, MDBInput,  } from "mdb-react-ui-kit";
 import { Form } from "react-bootstrap";
 import { actions } from "../../context/CvFormProvider";
+import { useFormData } from "../../hooks/useFormData";
 
  // Datos de prueba
 const provincesRD = [
@@ -47,14 +47,17 @@ export function useFetchProvinces(defaultSetter) {
     [isLoading, setLoadingState] = useState(true);
     
     useEffect(() => {    
+        if (Number.isNaN(Number(selectedCountry))) return
+        
         setProvinces([])
         setLoadingState(true)
-        
-        
-        setTimeout(() => {
-            setProvinces(provincesRD)
-            setLoadingState(false)
-        }, 5000)
+        fetch(`${import.meta.env.VITE_BACKEND_URL}/api/get-provinces/${selectedCountry}`)
+        .then(response => response.json())
+        .then(json => {
+            if (json.code == 200) return setProvinces(json.data)
+        })
+        .catch(err => console.log(err))
+        .finally(() => {setLoadingState(false)})
     
         
         return defaultSetter()
@@ -67,7 +70,7 @@ export function useFetchProvinces(defaultSetter) {
 
 
 
-export default function AddressForm() {
+export default function AddressForm({countries=[]}) {
 
     const {formState, formDataManager} = useFormData(),
         {address:totalAddres} = formState,
@@ -109,7 +112,7 @@ export default function AddressForm() {
         <MDBCol>
             <Form.Select ref={provinceInputRef} onChange={(e)=> changeAddress({provinceId: e.target.value})} >
                 <option>{isLoading? 'Cargando...' : 'Provincia'}</option>
-                {provinces.map((province) => 
+                {provinces?.map((province) => 
                 <option key={province.id} value={province.id} defaultChecked={province.id === provinceId} > {province.name} </option>
                 )}
                 
@@ -122,8 +125,10 @@ export default function AddressForm() {
         <Form.Select  onChange={e => {
             setSelectedCountry(e.target.value)
         }}>
-            <option value="5">	República Dominicana </option>
-            <option value="6">	Santiago? </option>
+            <option> -- Ciudad -- </option>
+            {
+                countries.map(country => <option key={country.id} value={country.id} >{country.name}</option>)
+            }
         </Form.Select>
         </MDBCol>
     </MDBRow>

@@ -5,16 +5,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import FormProvider from '../context/CvFormProvider'
 import PersonalInfo from '../components/formComponents/PersonalInfo';
 
-import axios from 'axios';
-
-import useAuth from "../hooks/useAuth"
 import ExperienceInfo from '../components/formComponents/ExperienceInfo';
+import EducationInfo from '../components/formComponents/EducationInfo';
+import useFetchFormData from '../hooks/useFetchFormData';
 
-
+// Register Curriculum Vitae form
 export default function CurriculumVitae() {
 
+  const {countries, languages, softSkills, careers, hobbies, isLoading} = useFetchFormData()
  
-
   return (
     <>
       <main className='container mx-auto'>
@@ -28,9 +27,9 @@ export default function CurriculumVitae() {
             >
             Ir al Perfil
             </Link>
-            <button type="button"  
-              className="custom-button-close"
-              // onClick={closeSesion}
+              <button type="button"  
+                className="custom-button-close"
+                // onClick={closeSesion}
             >
               Cerrar Sesión
             </button>
@@ -38,8 +37,9 @@ export default function CurriculumVitae() {
         </div>
         
         <FormProvider>
-          <PersonalInfo/>
-          <ExperienceInfo/>
+          <PersonalInfo availableHobbies={hobbies} isLoading={isLoading} countries={countries} />
+          <ExperienceInfo languages={languages} careers={careers} softSkills={softSkills} isLoading={isLoading}/>
+          <EducationInfo/>
         </FormProvider>
 
       </main>

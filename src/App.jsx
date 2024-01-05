@@ -8,6 +8,8 @@ import User from './pages/User'
 import CurriculumVitae from './pages/CurriculumVitae'
 
 import { AuthProvider } from './context/AuthProvider'
+import "bootstrap-icons/font/bootstrap-icons.css";
+
 
 function App() {
 
