@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGoogle, faFacebook, faSnapchat } from '@fortawesome/free-brands-svg-icons'
 
 import useAuth from '../hooks/useAuth'
+import { jwtDecode } from "jwt-decode"
 
 
 export default function Register() {
@@ -20,80 +21,13 @@ export default function Register() {
   const [ email, setEmail ] = useState('')
   const [ password, setPassword ] = useState('')
   const [ repetirPassword, setRepetirPassword ] = useState('')
-  const [ googleRegister, setGoogleRegister ] = useState(true)
-
   const [ alerta, setAlerta] = useState({})
-
   const { setAuth } = useAuth()
-  
   const navigate = useNavigate()
 
-  // Google login
-  const CustomGoogleLoginButton = ({ onClick }) => (
-    
-    <button 
-    style={{
-      width: '100%',
-      backgroundColor: '#ff2db6', 
-      color: 'white',
-      border: 'none',
-      padding: '4px 4px',   
-      borderRadius: '5px',    
-      fontSize: '1.25rem',       
-      fontWeight: 'bold',         
-      marginTop: '1rem',         
-    }} 
-      onClick={onClick}
-    >
-      <FontAwesomeIcon icon={faGoogle} />{' '}
-      Registrate
-    </button>
-  );
+ 
 
-  const clientID = `${import.meta.env.VITE_CLIENT_ID}`;
-
-  useEffect(() => {
-    const start = () => {
-      gapi.auth2.init({
-        clientId: clientID
-      })
-    }
-    gapi.load("client:auth2", start)
-  },[])
-
-  const onSuccess = async (response) => {
-    const { givenName, familyName, email, googleId, imageUrl } = response.profileObj
-    
-    try {
-      const url = `${import.meta.env.VITE_BACKEND_URL}/api/register`;
-      const response = await axios.post(url, {
-        "name": givenName,
-        "lastname": familyName,
-        "mail": email,
-        "password": googleId,
-        "image": imageUrl
-    })
-
-
-      const urllogin = `${import.meta.env.VITE_BACKEND_URL}/api/login`
-      const data = await axios.post(urllogin, {name:email, pass:googleId});
-      await localStorage.setItem('qv_token', data.data.csrf_token)
-      navigate('/user/register-cv')
-
-    } catch (error) {
-      setAlerta({msg: 'Ocurrio un error', error: true})
-      console.log(error)
-    }
-     
-  }
-
-  const onFailure = () => {
-    setAlerta({msg: 'Ocurrio un error', error: true})
-    
-  }
-
-
-
+  
   const handleSubmit = async e => {
     e.preventDefault();
 
@@ -107,7 +41,7 @@ export default function Register() {
       return 
     }
 
-    if(password.length < 4){
+    if(password.length < 7){
       setAlerta({msg: 'La contraseña es muy corta, agrega minimo 7 caracteres', error: true})
       return 
       
@@ -115,24 +49,26 @@ export default function Register() {
 
     setAlerta({})
 
-   
     try {
       const url = `${import.meta.env.VITE_BACKEND_URL}/api/register`;
-      const respuesta = await axios.post(url, {
+      const response = await axios.post(url, {
         "name": name,
         "lastname": lastname,
-        "mail": email,
+        "email": email,
         "password": password,
-        "image": image
       })
+      console.log(response.data)
+      if(response.data){
+        localStorage.setItem('qv_token', response.data)
+        navigate('/user/register-cv')
+      }
     
-      const urllogin = `${import.meta.env.VITE_BACKEND_URL}/api/login`
-      const  data  = await axios.post(urllogin, {name:email, pass:password});
-      await localStorage.setItem('qv_token', data.data.csrf_token)           
-      navigate('/user/register-cv')
-
     } catch (error) {
       console.log(error)
+      setAlerta({
+        msg: error.response.data.msg,
+        error: true 
+      })
     }
   }
 
@@ -153,7 +89,7 @@ export default function Register() {
                             <div className='card-body'>
 
                             { msg && <Alerts alerta={alerta} />}
-                            <form onClick={handleSubmit} >
+                            <form onSubmit={handleSubmit} >
 
                                 <div className='my-3'>
                                   <label htmlFor="" className='fs-5 text-uppercase fw-bold d-block'>
@@ -161,7 +97,7 @@ export default function Register() {
                                   </label>
                                   <input type="text" placeholder='Tu Nombre' className='border w-100 bg-light rounded p-2 mt-2' 
                                   value={name}
-                                  onChange={(e) => setFullName(e.target.value)} 
+                                  onChange={(e) => setName(e.target.value)} 
                                   />
                                 </div>
 
@@ -171,7 +107,7 @@ export default function Register() {
                                   </label>
                                   <input type="text" placeholder='Tu Apellido' className='border w-100 bg-light rounded p-2 mt-2' 
                                   value={lastname}
-                                  onChange={(e) => setUser(e.target.value)} 
+                                  onChange={(e) => setLastname(e.target.value)} 
                                   />
                                 </div>
                                 
@@ -209,22 +145,19 @@ export default function Register() {
 
                             </form>
 
-                              <nav className="w-100 text-center mt-5">
+                            <nav className="w-100 text-center mt-5">
 
-                                <Link to={'/'} className="d-block my-3 text-decoration-none text-black bg-color-rosa fs-5">
+                              <Link to={'/'} className="d-block my-3 text-decoration-none text-black bg-color-rosa fs-5">
                                 ¿Ya tienes una Cuenta? Inicia Sesión!
-                                </Link>
+                              </Link>
 
-                              </nav>
+                            </nav>
 
 
                             </div>
                           </div>
                         </div>
-                     
-
-                      
-                 
+                        
             </div>
         </main>
     </>
