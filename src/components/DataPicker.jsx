@@ -1,30 +1,20 @@
 /* eslint-disable react/prop-types */
 import { Form } from "react-bootstrap"
 
-export default function DataPicker({label, value, onChange}) {
+export default function DataPicker({label, value, onChange, max}) {
   return (
     <div className="row">
-      {label && (
-        <div>
+      <div>
           <Form.Group controlId="dob">
-            <Form.Label>{label}</Form.Label>
-            <Form.Control type="date" name="dob" placeholder="Date of Birth" 
+            {label && <Form.Label>{label}</Form.Label>}
+            <Form.Control type="date" name="dob" 
+              max={max}
+              placeholder="Date of Birth" 
               value={value}
               onChange={onChange}
             />
           </Form.Group>
         </div>
-      )}
-      {!label && (
-        <div>
-          <Form.Group controlId="dob">
-            <Form.Control type="date" name="dob" placeholder="Date of Birth" 
-               value={value}
-               onChange={onChange}
-            />
-          </Form.Group>
-        </div>
-      )}
     </div>
   )
 }

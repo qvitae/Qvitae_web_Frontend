@@ -6,6 +6,16 @@
 @use './scss/base/resets';
 @use './scss/base/base';
 
+// Global
+
+:root {
+  --primary: #0072e9;
+}
+
+h2 {
+  font-size: 1.5em!important;
+}
+
 .color-rosa {
     color: #ff2db6;
 }
@@ -15,7 +25,7 @@
 }
 
 .color-azul {
-    color: #0072e9
+    color: var(--primary)
 }
 
 .bg-color-azul {
@@ -150,3 +160,17 @@ html, body, #root {
       width: 100%;
     }
   }
+
+  div::-webkit-scrollbar {
+    height: 6px;
+    width: 10px;
+    border-radius: 10px;
+    background-color: #ddd;
+  }
+
+  div::-webkit-scrollbar-thumb {
+    background-color: var(--primary);
+    border-radius: 10px;
+    
+  }
+

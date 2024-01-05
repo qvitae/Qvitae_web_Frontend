@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { jwtDecode } from 'jwt-decode'
 import Alerts from '../components/Alerts'
 import GoogleLogin from 'react-google-login'
 import { gapi } from 'gapi-script'
@@ -47,9 +48,8 @@ export default function Login() {
  
 
   const handleGoogleLogin = () => {
-    window.location.href = `${import.meta.env.VITE_BACKEND_URL}/api/login/google`;
+    window.location.href = `${import.meta.env.VITE_BACKEND_URL}/api/google`;
   }
-
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -57,10 +57,17 @@ export default function Login() {
 
     if (token) {
       localStorage.setItem('qv_token', token);
-      navigate('/user'); // Redirige al componente User
+      const decoded = jwtDecode(token)
+      console.log(decoded.payload)
+      if(decoded.payload.hasCV === true){
+        navigate('/user');
+
+      }else {
+        navigate('/user/register-cv');
+      }
+       
     }
   },[navigate])
-
 
 
 
@@ -68,28 +75,37 @@ export default function Login() {
   const handleSubmit = async e => {
     e.preventDefault();
 
-    // if([email, password].includes('')){
-    //   setAlerta({
-    //     msg: 'Todos los campos son obligatorios',
-    //     error: true
-    //   })
-    //   return 
-    // }
+    if([email, password].includes('')){
+      setAlerta({
+        msg: 'Todos los campos son obligatorios',
+        error: true
+      })
+      return 
+    }
 
-    //   try {
-    //     const url = `${import.meta.env.VITE_BACKEND_URL}/api/login`
-    //     const { data } = await axios.post(url, {email, password});
-    //     await localStorage.setItem('qv_token', data.token)
-    //     setAuth(data)
-    //     navigate('/user')
-
-    //   } catch (error) {
-    //     console.log(error.response.data.message)
-    //     setAlerta({
-    //       msg: error.response.data.message,
-    //       error: true 
-    //     })
-    //   }
+    try {
+      const url = `${import.meta.env.VITE_BACKEND_URL}/api/login`
+      const { data } = await axios.post(url, {email, password});
+      console.log(data)
+      if(data){
+        localStorage.setItem('qv_token', data)
+        const decoded = jwtDecode(data)
+        console.log(decoded.payload)
+        if(decoded.payload.hasCV === true){
+          navigate('/user')
+  
+        }else{
+          navigate('/user/register-cv')
+        }
+      }
+      
+    } catch (error) {
+        console.log(error)
+        setAlerta({
+          msg: error.response.data.msg,
+          error: true 
+        })
+      }
   }
 
 
@@ -111,33 +127,33 @@ export default function Login() {
                           <div className='card-body'>
       
                   
-                          <form  onClick={handleSubmit} >
-                                              
-                          <CustomGoogleLoginButton onClick={handleGoogleLogin} />
+                      <div>
+                  
+                        <CustomGoogleLoginButton onClick={handleGoogleLogin} />
                          
-                          <button className='facebook-button'>
-                            <FontAwesomeIcon icon={faFacebook} />{' '}
+                        <button className='facebook-button'>
+                          <FontAwesomeIcon icon={faFacebook} />{' '}
                             FaceBook 
-                          </button>
+                        </button>
 
-                          <button className='snapchat-button'>
+                        <button className='snapchat-button'>
                             <FontAwesomeIcon icon={faSnapchat} />{' '}
                             Snapchat 
-                          </button>
+                        </button>
 
-                          <button to={''} className="qv-button"
-                            onClick={() => setGoogleLogin(false)}
-                          >
-                          <img src="/images/QVITAE-LOGO.png" alt="Logo" className="img-qv-logo"/>{' '}
+                        <button to={''} className="qv-button"
+                          onClick={() => setGoogleLogin(false)}
+                        >
+                        <img src="/images/QVITAE-LOGO.png" alt="Logo" className="img-qv-logo"/>{' '}
                           Correo
-                          </button>
-                    </form>
-                    <nav className="w-100 text-center mt-5">
+                        </button>
+                      </div>
+                      <nav className="w-100 text-center mt-5">
                         <Link to={'/register'} className="d-block my-3 text-decoration-none text-black bg-color-rosa fs-5">
                         Registrarse con otra cuenta, click aquí!
                         </Link>
                       </nav>
-                    </div>
+                      </div>
                     </div>
                     </div>
                     ) : (
@@ -146,7 +162,7 @@ export default function Login() {
                         <div className='card-body'>
 
                         { msg && <Alerts alerta={alerta} />}    
-                        <form  onClick={handleSubmit} >
+                        <form  onSubmit={handleSubmit} >
                           <div className='my-3'>
                             <label htmlFor="" className='fs-5 text-uppercase fw-bold d-block'>
                               email
@@ -171,10 +187,10 @@ export default function Login() {
 
                           <CustomGoogleLoginButton onClick={handleGoogleLogin} />
                         </form>
-                      <nav className="w-100 text-center mt-5">
-                        <Link to={'/register'} className="d-block my-3 text-decoration-none text-black bg-color-rosa fs-5">
-                        Registrarse con otra cuenta, click aquí!
-                        </Link>
+                        <nav className="w-100 text-center mt-5">
+                          <Link to={'/register'} className="d-block my-3 text-decoration-none text-black bg-color-rosa fs-5">
+                          Registrarse con otra cuenta, click aquí!
+                          </Link>
 
                         
                       </nav>

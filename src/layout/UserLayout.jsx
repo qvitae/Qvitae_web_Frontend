@@ -23,7 +23,7 @@ export default function AuthLayout() {
             <Footer /> 
           </>
           : < Navigate to={'/'} />
-        }
+       }
        
     </>
    
