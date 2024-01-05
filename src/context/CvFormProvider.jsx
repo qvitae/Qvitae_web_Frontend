@@ -1,5 +1,6 @@
-import React, {createContext, useContext, useReducer} from "react";
+import React, {createContext, useReducer} from "react";
 import { MDBBtn } from "mdb-react-ui-kit";
+import { customFetch } from "../helpers/fetchers";
 
 export const actions = {
     setName: 'set-name',
@@ -38,8 +39,8 @@ const initialState = {
         gender: 'm'
     },
     career: {
-        career: "",
-        experience: "",
+        name: "",
+        experience: 0,
     },
     address: {
         address: "",
@@ -154,27 +155,35 @@ function reducer(state, action) {
             throw new Error('Accion no válida: ' + action.type)
     }
 }
-
-
-
 export const FormContext = createContext()
 
+
+
+ 
 export default function CVFormContext({children}) {
 
     const [form, dispatch] = useReducer(reducer, initialState)
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault()
-        console.log('xD')
-    }
-    
+        try {
+            let response = await customFetch(`${import.meta.env.VITE_BACKEND_URL}/api/add-curriculum`, {method: 'POST'}, JSON.stringify(form))
+            if (response.code == 200) {
+                
+                return console.log(response.message)
+            }
+        }catch (err) {
+            console.log(err)
+            
+        }
+    }       
    
 
     return <FormContext.Provider value={{formState:form, formDataManager: dispatch}}>
         <form onSubmit={handleSubmit}>
             {children}
             <div className='d-flex mt-2 justify-content-end'>
-                <MDBBtn type='submit' className='w-100'>Enviar CV</MDBBtn>
+                <MDBBtn onClick={handleSubmit} type='submit' className='w-100'>Enviar CV</MDBBtn>
             </div>
         </form>
     </FormContext.Provider>

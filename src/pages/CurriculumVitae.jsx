@@ -13,9 +13,8 @@ import useFetchFormData from '../hooks/useFetchFormData';
 // Register Curriculum Vitae form
 export default function CurriculumVitae() {
 
-  const {countries, languages, softSkills, careers, hobbies, isLoading} = useFetchFormData()
-  
-  const {closeSesion} = useAuth()
+  const {countries, languages, softSkills, careers, hobbies, isLoading} = useFetchFormData(),
+        {closeSesion} = useAuth()
 
   return (
     <>

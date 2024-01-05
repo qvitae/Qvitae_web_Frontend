@@ -8,86 +8,6 @@ import LanguagesForm from "./languagesForm";
 import JobsForms from "./jobsForms";
 
 
-const softSkillsAvailable = [
-  { name: "Inteligencia Emocional", id: 1 },
-  { name: "Capacidad de Negociación", id: 2 },
-  { name: "Creatividad", id: 3 },
-  { name: "Manejo del Tiempo", id: 4 },
-  { name: "Nivel de Urgencia", id: 5 },
-  { name: "Liderazgo", id: 6 },
-  { name: "Comunicación Efectiva", id: 7 },
-  { name: "Capacidad de Adaptación", id: 8 },
-  { name: "Pensamiento Crítico", id: 9 },
-  { name: "Solución de Problemas", id: 10 },
-  { name: "Ética Laboral", id: 11 }
-],
-
-carreras = [
-  { id: "1", name: "Ingenieria en Sistemas" },
-  { id: "2", name: "Tecnólogo en Software" },
-  { id: "3", name: "Tecnólogo en Redes" },
-  { id: "4", name: "Tecnólogo en Seguridad Informática" },
-  { id: "5", name: "DISTRITO NACIONAL" },
-  { id: "6", name: "Administrador de Bases de Datos" },
-  { id: "7", name: "Arquitecto" },
-  { id: "8", name: "Ingeniero Eléctrico, Electromecánico, Robótica" },
-  { id: "9", name: "Ingeniero Civil" },
-  { id: "10", name: "Ingeniero Industrial" },
-  { id: "11", name: "Medicina" },
-  { id: "12", name: "Bío-Analista" },
-  { id: "13", name: "Enfermería" },
-  { id: "14", name: "Contabilidad Finanzas" },
-  { id: "15", name: "Administrador de Empresas" },
-  { id: "16", name: "Relaciones Internacionales" },
-  { id: "17", name: "Hotelería y Turismo" },
-  { id: "18", name: "Mercadeo" },
-  { id: "19", name: "Maestro" },
-  { id: "20", name: "Psicología" },
-  { id: "21", name: "Abogado" },
-  { id: "22", name: "Asistente" },
-  { id: "23", name: "Secretaria" },
-  { id: "24", name: "Chofer" }
-]
-
-function useFetchCareers() {
-  const [careers, setCareers] = useState([]),
-      [isLoading, setLoading] = useState(true)
-
-  useEffect(() => {
-    setTimeout(() => {
-      
-      setCareers(carreras)
-      setLoading(false)
-    }, 5000)
-
-
-  }, [])
-
-  return [careers, isLoading]
-}
-
-function useFetchSoftSkils() {
-  const [softSkills, setCareers] = useState([]),
-      [isLoading, setLoading] = useState(true)
-
-  useEffect(() => {
-    setTimeout(() => {
-      
-      setCareers(softSkillsAvailable)
-      setLoading(false)
-    }, 5000)
-
-
-  }, [])
-
-  return [softSkills, isLoading]
-}
-
-
-
-
-
-
 export default function ExperienceInfo({languages, careers, softSkills, isLoading}) {
 
     const {formState, formDataManager} = useFormData(),
@@ -149,12 +69,12 @@ export default function ExperienceInfo({languages, careers, softSkills, isLoadin
               <MDBRow className='mb-5'>
                 <MDBCol lg="4" className='mb-3'>
                   <Form.Select onChange={e => {
-                    formDataManager({type: actions.setCareer, values: {career: e.target.value}})
+                    formDataManager({type: actions.setCareer, values: {name: e.target.value}})
                   }}>
                     <option>{ isLoading? 'Cargando...' : 'Profesión'}</option>
                     {
                       careers?.map(career =>
-                        <option key={career.id} value={career.id} >{career.name}</option>  
+                        <option key={career.id} value={career.name} >{career.name}</option>  
                       )
                     }
 
