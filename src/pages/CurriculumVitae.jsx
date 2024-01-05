@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import useAuth from '../hooks/useAuth';
 
 import FormProvider from '../context/CvFormProvider'
 import PersonalInfo from '../components/formComponents/PersonalInfo';
@@ -13,7 +14,9 @@ import useFetchFormData from '../hooks/useFetchFormData';
 export default function CurriculumVitae() {
 
   const {countries, languages, softSkills, careers, hobbies, isLoading} = useFetchFormData()
- 
+  
+  const {closeSesion} = useAuth()
+
   return (
     <>
       <main className='container mx-auto'>
@@ -29,7 +32,7 @@ export default function CurriculumVitae() {
             </Link>
               <button type="button"  
                 className="custom-button-close"
-                // onClick={closeSesion}
+                onClick={closeSesion}
             >
               Cerrar Sesión
             </button>

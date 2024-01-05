@@ -19,6 +19,7 @@
     "bootstrap": "5",
     "bootstrap-icons": "^1.11.3",
     "gapi-script": "^1.2.0",
+    "jwt-decode": "^4.0.0",
     "mdb-react-ui-kit": "^7.0.0",
     "postcss": "8.4.12",
     "react": "^18.2.0",
