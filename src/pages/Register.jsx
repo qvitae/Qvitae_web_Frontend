@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
 import Alerts from "../components/Alerts"
 // import '../main'
-import GoogleLogin from 'react-google-login'
+// import GoogleLogin from 'react-google-login'
 import { gapi } from 'gapi-script'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
