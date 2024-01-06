@@ -17,7 +17,7 @@ import { jwtDecode } from "jwt-decode"
 export default function Register() {
 
   const [ name, setName ] = useState('')
-  const [ lastname, setLastname ] = useState('')
+  const [ lastName, setLastName ] = useState('')
   const [ email, setEmail ] = useState('')
   const [ password, setPassword ] = useState('')
   const [ repetirPassword, setRepetirPassword ] = useState('')
@@ -31,7 +31,7 @@ export default function Register() {
   const handleSubmit = async e => {
     e.preventDefault();
 
-    if([name, lastname, email, password, repetirPassword].includes('')){
+    if([name, lastName, email, password, repetirPassword].includes('')){
       setAlerta({msg: 'Hay campos vacios', error: true})
       return 
     }
@@ -53,11 +53,11 @@ export default function Register() {
       const url = `${import.meta.env.VITE_BACKEND_URL}/api/register`;
       const response = await axios.post(url, {
         "name": name,
-        "lastname": lastname,
+        "lastName": lastName,
         "email": email,
         "password": password,
       })
-      console.log(response.data)
+      
       if(response.data){
         localStorage.setItem('qv_token', response.data)
         navigate('/user/register-cv')
@@ -106,8 +106,8 @@ export default function Register() {
                                     Apellido
                                   </label>
                                   <input type="text" placeholder='Tu Apellido' className='border w-100 bg-light rounded p-2 mt-2' 
-                                  value={lastname}
-                                  onChange={(e) => setLastname(e.target.value)} 
+                                  value={lastName}
+                                  onChange={(e) => setLastName(e.target.value)} 
                                   />
                                 </div>
                                 

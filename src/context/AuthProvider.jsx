@@ -1,6 +1,6 @@
 import { useState, useEffect, createContext } from "react";
 import axios from "axios";
-
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext()
 
@@ -9,6 +9,9 @@ const AuthProvider = ({ children }) => {
 
     const [ loading, setLoading ] = useState(true)
     const [ auth, setAuth ] = useState({})
+
+    const navigate = useNavigate()
+
 
     useEffect(() => {
         const authenticateUser = async () => {
@@ -25,7 +28,7 @@ const AuthProvider = ({ children }) => {
                     Authorization: `Bearer ${token}`,                  
               }
             }
-  
+
             try {
                 const url = `${import.meta.env.VITE_BACKEND_URL}/api/user`
                 const { data } = await axios.get(url, config)
@@ -40,7 +43,7 @@ const AuthProvider = ({ children }) => {
             setLoading(false)
         }
         authenticateUser()
-    },[])
+    },[navigate])
 
     const closeSesion = () => {
         localStorage.removeItem('qv_token') 

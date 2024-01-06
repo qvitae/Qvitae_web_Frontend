@@ -58,7 +58,7 @@ export default function Login() {
     if (token) {
       localStorage.setItem('qv_token', token);
       const decoded = jwtDecode(token)
-      console.log(decoded.payload)
+  
       if(decoded.payload.hasCV === true){
         navigate('/user');
 
@@ -86,11 +86,11 @@ export default function Login() {
     try {
       const url = `${import.meta.env.VITE_BACKEND_URL}/api/login`
       const { data } = await axios.post(url, {email, password});
-      console.log(data)
+      
       if(data){
         localStorage.setItem('qv_token', data)
         const decoded = jwtDecode(data)
-        console.log(decoded.payload)
+        
         if(decoded.payload.hasCV === true){
           navigate('/user')
   
