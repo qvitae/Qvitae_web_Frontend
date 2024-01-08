@@ -32,7 +32,7 @@ export default function JobsForms() {
                         )}
                     />
                     <MDBTextArea className="mb-3" style={{maxHeight: '200px'}} label='Descripción del Puesto' id='textAreaExample' rows={4} 
-                        value={experience.positionDescription}  onChange={(e) => changeSomeJobExpirience(
+                        value={experience.positionDescription || ''}  onChange={(e) => changeSomeJobExpirience(
                             index, {positionDescription: e.target.value}
                         )}
                     />
