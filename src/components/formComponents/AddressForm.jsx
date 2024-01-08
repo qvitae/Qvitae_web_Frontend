@@ -4,42 +4,6 @@ import { Form } from "react-bootstrap";
 import { actions } from "../../context/CvFormProvider";
 import { useFormData } from "../../hooks/useFormData";
 
- // Datos de prueba
-const provincesRD = [
-    { name: "Azua", id: 1 },
-    { name: "Bahoruco", id: 2 },
-    { name: "Barahona", id: 3 },
-    { name: "Dajabón", id: 4 },
-    { name: "Distrito Nacional", id: 5 },
-    { name: "Duarte", id: 6 },
-    { name: "Elías Piña", id: 7 },
-    { name: "El Seibo", id: 8 },
-    { name: "Espaillat", id: 9 },
-    { name: "Hato Mayor", id: 10 },
-    { name: "Hermanas Mirabal", id: 11 },
-    { name: "Independencia", id: 12 },
-    { name: "La Altagracia", id: 13 },
-    { name: "La Romana", id: 14 },
-    { name: "La Vega", id: 15 },
-    { name: "María Trinidad Sánchez", id: 16 },
-    { name: "Monseñor Nouel", id: 17 },
-    { name: "Monte Cristi", id: 18 },
-    { name: "Monte Plata", id: 19 },
-    { name: "Pedernales", id: 20 },
-    { name: "Peravia", id: 21 },
-    { name: "Puerto Plata", id: 22 },
-    { name: "Samaná", id: 23 },
-    { name: "San Cristóbal", id: 24 },
-    { name: "San José de Ocoa", id: 25 },
-    { name: "San Juan", id: 26 },
-    { name: "San Pedro de Macorís", id: 27 },
-    { name: "Sánchez Ramírez", id: 28 },
-    { name: "Santiago", id: 29 },
-    { name: "Santiago Rodríguez", id: 30 },
-    { name: "Valverde", id: 31 },
-    { name: "San Pedro de Macorís", id: 32 }
-]
-
 
 export function useFetchProvinces(defaultSetter) {
     const [provinces, setProvinces] = useState([]),
@@ -60,7 +24,7 @@ export function useFetchProvinces(defaultSetter) {
         .finally(() => {setLoadingState(false)})
     
         
-        return defaultSetter()
+        return defaultSetter
     }, [selectedCountry])
 
     
@@ -81,7 +45,11 @@ export default function AddressForm({countries=[]}) {
         
         provinceInputRef = useRef()
 
-    const {provinces, setSelectedCountry, isLoading} = useFetchProvinces(() => changeAddress({provinceId: null}))  
+    const {provinces, setSelectedCountry, isLoading} = useFetchProvinces(() => {
+        let input = provinceInputRef.current
+
+        input?.classList?.add('border-danger')
+    })  
         
 
 
@@ -110,10 +78,10 @@ export default function AddressForm({countries=[]}) {
         />
         </MDBCol>
         <MDBCol>
-            <Form.Select ref={provinceInputRef} onChange={(e)=> changeAddress({provinceId: e.target.value})} >
+            <Form.Select ref={provinceInputRef} className={!provinceId && 'border-danger'} value={provinceId || ''} onChange={(e)=> changeAddress({provinceId: Number(e.target.value) > 1? e.target.value : null})} >
                 <option>{isLoading? 'Cargando...' : 'Provincia'}</option>
                 {provinces?.map((province) => 
-                <option key={province.id} value={province.id} defaultChecked={province.id === provinceId} > {province.name} </option>
+                    <option key={province.id} value={province.id} > {province.name} </option>
                 )}
                 
             </Form.Select>

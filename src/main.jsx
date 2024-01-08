@@ -4,6 +4,8 @@ import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import App from './App.jsx'
 import './index.scss'
 import axios from 'axios'
+import { ErrorBoundary } from 'react-error-boundary';
+import ErrorPage from './pages/Error.jsx';
 
 axios.defaults.debug = true;
 
@@ -13,8 +15,11 @@ import 'bootstrap-icons/font/bootstrap-icons.json'
 // Bootstrap Bundle JS
 import "bootstrap/dist/js/bootstrap.bundle.min";
 
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <App />
+    <ErrorBoundary fallback={<ErrorPage/>}>
+      <App />
+    </ErrorBoundary>
   </React.StrictMode>,
 )

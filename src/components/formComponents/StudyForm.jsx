@@ -7,10 +7,10 @@ import { useFormData } from "../../hooks/useFormData"
 export default function StudyForm({gradeLevel = "superiorEducation", gradeIcon = (<i className="icon bi-mortarboard"></i>)}) {
     const {formState, formDataManager} = useFormData(),
             {userStudies} = formState,
-            studies = userStudies.filter(study => study.grade == gradeLevel),
+            studies = userStudies.filter(study => study.eduactionGrade?.toLowerCase() == gradeLevel.toLocaleLowerCase()),
 
-            changeSomeStudy = (study, values) => {
-                formDataManager({type: actions.setStudy, study, values})
+            changeSomeStudy = (id, values) => {
+                formDataManager({type: actions.setStudy, id, values})
             }
 
     return (
@@ -24,19 +24,19 @@ export default function StudyForm({gradeLevel = "superiorEducation", gradeIcon =
                                         <MDBCol lg="4" className='mb-3'>
                                             <MDBInput label='Profesión' id='form1' type='text' 
                                             value={study.career}
-                                            onChange={(e) => {changeSomeStudy(study, {career: e.target.value})}}
+                                            onChange={(e) => {changeSomeStudy(study.id, {career: e.target.value})}}
                                             />
                                         </MDBCol>
                                         <MDBCol lg="4" className='mb-3'>
                                             <MDBInput label='Academia' id='form1' type='text' 
                                             value={study.academy}
-                                            onChange={(e) => {changeSomeStudy(study, {academy: e.target.value})}}
+                                            onChange={(e) => {changeSomeStudy(study.id, {academy: e.target.value})}}
                                             />
                                         </MDBCol>
                                         <MDBCol lg="4" className='mb-3'>
                                             <DataPicker 
                                             value={study.endDate} 
-                                            onChange={(e) => {changeSomeStudy(study, {endDate: e.target.value})}}
+                                            onChange={(e) => {changeSomeStudy(study.id, {endDate: e.target.value})}}
                                             />
                                         </MDBCol>
                                     </MDBRow>
@@ -54,7 +54,7 @@ export default function StudyForm({gradeLevel = "superiorEducation", gradeIcon =
             </div>
             <MDBBtn className="mt-2" onClick={(ev) => {
                 ev.preventDefault()
-                formDataManager({type: actions.addStudy, grade: gradeLevel})
+                formDataManager({type: actions.addStudy, eduactionGrade: gradeLevel})
             }}>Agregar Carrera</MDBBtn>
         </>)
 }

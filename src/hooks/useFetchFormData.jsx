@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { customFetch } from "../helpers/fetchers";
+import { actions } from "../context/CvFormProvider";
 
 
 // Function to map the data in case the data structure change on the future
@@ -52,4 +54,57 @@ export default function useFetchFormData() {
     }, [])
 
     return {countries, softSkills, hobbies, languages, careers, isLoading}
+}
+
+export function useDefaultUserFormData(initialState, dispatch) {
+    useEffect(() => {
+        async function loadData() {
+            const data = await customFetch(`${import.meta.env.VITE_BACKEND_URL}/api/user`)
+            const {name, lastName, curriculum} = data
+    
+            initialState.name = name
+            initialState.lastName = lastName
+        
+            if (curriculum) {
+                initialState.personalData = {
+                    handicapped: Boolean(curriculum.handicapped),
+                    gender: curriculum.gender || 'm',
+                    alternativeEmail: curriculum.alternativeEmail,
+                    identificationId: curriculum.identificationId,
+                    birthDate: curriculum.birthDate || new Date(),
+                    phoneNumber: curriculum.phoneNumber,
+                    personalDescription: curriculum.personalDescription || ''
+                }
+                
+                const userAddress = curriculum.address
+                
+                Object.entries(userAddress).forEach(([key, value]) => initialState.address[key] = value)
+                
+                const {userCareer} = curriculum
+                
+                initialState.career = {
+                    experience: userCareer.experience || 0,
+                    name: userCareer?.career?.name || ''
+                }
+                
+                initialState.hobbies = curriculum.hobbies?.map(userHob => ({hobbyId: userHob.userHobby.hobbyId})) || []
+                
+                initialState.softSkills = curriculum.softSkills?.map(skill => ({softSkillId: skill.userSkill.softSkillId})) || []
+                
+                initialState.userJobsExperiences = curriculum.userJobsExperiences?.map(job => job) || []
+
+                initialState.userLanguages = curriculum.languages?.map(lang => lang.UserLanguage) || []
+
+                initialState.userReferences = curriculum.userReferences?.map(ref => ref) || []
+
+                initialState.userStudies = curriculum.userStudies?.map(study => study) || []
+                
+                
+                console.log(initialState)
+            }
+            dispatch({type: actions.setState, values: initialState})
+        }
+        loadData()
+    },[])
+    return initialState
 }

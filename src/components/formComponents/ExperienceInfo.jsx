@@ -8,23 +8,22 @@ import LanguagesForm from "./languagesForm";
 import JobsForms from "./jobsForms";
 
 
-export default function ExperienceInfo({languages, careers, softSkills, isLoading}) {
+export default function ExperienceInfo({languages = [], careers = [], softSkills = [], isLoading = true}) {
 
     const {formState, formDataManager} = useFormData(),
           {softSkills:userSkills, personalData, userReferences = []} = formState,
-          {experience} = formState.career,
+          {experience, name:careerName} = formState.career,
 
         handlePersonalDescription = (ev) =>{
           let value = ev.target.value
           formDataManager({type: actions.setPersonalData, personalData: {...personalData, personalDescription: value}})
         },
-        changeSomeReference = (reference, values) => {
-          formDataManager({type: actions.setReference, reference, selectedReference: {...reference, ...values}})
+        changeSomeReference = (id, values) => {
+          formDataManager({type: actions.setReference, id, values: {...id, ...values}})
         }
 
-
     return <MDBAccordion>
-    <MDBAccordionItem collapseId={1} headerTitle={<><i className="icon bi-file-earmark-text text-primary" /> &nbsp; Experiencia laboral</>}>
+    <MDBAccordionItem collapseId={2} headerTitle={<><i className="icon bi-file-earmark-text text-primary" /> &nbsp; Experiencia laboral</>}>
       
 
       <div className='row pt-3 '>
@@ -42,7 +41,7 @@ export default function ExperienceInfo({languages, careers, softSkills, isLoadin
                         <MDBSwitch 
                           id={`flexSwitchCheckDefault${skill.id}`} 
                           label={skill.name} 
-                          checked={userSkills.find(userSkill => userSkill.softSkillId == skill.id)} // Asegúrate de que el estado del switch refleje el valor actual de la habilidad
+                          checked={userSkills.some(userSkill => userSkill.softSkillId == skill.id)} // Asegúrate de que el estado del switch refleje el valor actual de la habilidad
                           onChange={e => e.target.checked? 
                             formDataManager({type: actions.addSoftSkill, skillId: skill.id}) 
                             : 
@@ -68,10 +67,10 @@ export default function ExperienceInfo({languages, careers, softSkills, isLoadin
               <h2>Información profesional</h2>
               <MDBRow className='mb-5'>
                 <MDBCol lg="4" className='mb-3'>
-                  <Form.Select onChange={e => {
+                  <Form.Select value={careerName} onChange={e => {
                     formDataManager({type: actions.setCareer, values: {name: e.target.value}})
                   }}>
-                    <option>{ isLoading? 'Cargando...' : 'Profesión'}</option>
+                    <option>{ isLoading? 'Cargando...' : 'Profesión'} </option>
                     {
                       careers?.map(career =>
                         <option key={career.id} value={career.name} >{career.name}</option>  
@@ -84,7 +83,10 @@ export default function ExperienceInfo({languages, careers, softSkills, isLoadin
                 <MDBCol lg="4">
                   <MDBInput label='Años de Experiencia' id='typeNumber' type='number' 
                     value={experience} onChange={(e) => {
-                      if (Number.isNaN(Number(e.target.value))) console.log('error')
+                      if (Number.isNaN(Number(e.target.value))) {
+                        formDataManager({type: actions.setCareer, values: {experience: 0}})
+                        return
+                      }
 
                       formDataManager({type: actions.setCareer, values: {experience: Math.abs(Number(e.target.value))}})
                     }}
@@ -122,7 +124,7 @@ export default function ExperienceInfo({languages, careers, softSkills, isLoadin
                 <MDBCol>
                   <h2> Referencia Personal o Laboral </h2>
                   <div className="col-12 mb-2 row align-items-center flex-nowrap d-inline-flex w-100" style={{overflowX: 'scroll', minHeight: '200px'}}>
-                    {userReferences.length > 0? userReferences.map((reference, index) => (
+                    {userReferences?.length > 0? userReferences?.map((reference, index) => (
                       // eslint-disable-next-line react/jsx-key
                         <MDBCard key={`Reference-${index}`} className='mb-3 me-2 col-11 col-md-5' >
                           <MDBCardBody>
@@ -130,17 +132,17 @@ export default function ExperienceInfo({languages, careers, softSkills, isLoadin
                               <MDBCol className='mb-3 col-12'>
                                 <MDBInput label='Nombre y Apellido' type='text'
                                   value={reference.fullName}
-                                  onChange={(e) => {changeSomeReference(reference, {fullName: e.target.value})}} />
+                                  onChange={(e) => {changeSomeReference(index, {fullName: e.target.value})}} />
                               </MDBCol>
                               <MDBCol className='mb-3 col-12'>
                                 <MDBInput label='Teléfono' type='tel'
                                   value={reference.phoneNumber}
-                                  onChange={(e) => {changeSomeReference(reference, {phoneNumber: e.target.value})}} />
+                                  onChange={(e) => {changeSomeReference(index, {phoneNumber: e.target.value})}} />
                               </MDBCol>
                               <MDBCol className="col-12">
                                 <MDBInput label='Correo' type='email'
                                   value={reference.email}
-                                  onChange={(e) => {changeSomeReference(reference, {email: e.target.value})}} />
+                                  onChange={(e) => {changeSomeReference(index, {email: e.target.value})}} />
                               </MDBCol>
                               <MDBCol className="mx-auto mt-lg-0 col-6" lg="3">
                                 <MDBBtn onClick={(ev) => {

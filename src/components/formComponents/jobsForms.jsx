@@ -14,40 +14,40 @@ export default function JobsForms() {
     const {formState, formDataManager} = useFormData(),
         {userJobsExperiences} = formState,
 
-        changeSomeJobExpirience = (jobExperience, values) => 
-            formDataManager({type: actions.setSomeJobsExperience, jobExperience, values})
+        changeSomeJobExpirience = (id, values) => 
+            formDataManager({type: actions.setSomeJobsExperience, id, values})
 
-    return userJobsExperiences.length > 0? userJobsExperiences.map((experience, index) => (
+    return userJobsExperiences?.length > 0? userJobsExperiences.map((experience, index) => (
         <MDBCard key={index} className='mb-3 p-0 col-10 col-md-5 mx-2' style={{flex: '1 1 1'}} >
             <MDBCardBody>
                 {/* <MDBTable>   */}
                     <MDBInput className="mb-3" label='Posición' id='form1' type='text' 
                         value={experience?.position} onChange={(e) => changeSomeJobExpirience(
-                            experience, {position: e.target.value}
+                            index, {position: e.target.value}
                         )}
                     />
                     <MDBInput className="mb-3" label='Nombre de la Empresa' id='form1' type='text' 
                         value={experience?.companyName} onChange={(e) => changeSomeJobExpirience(
-                            experience, {companyName: e.target.value}
+                            index, {companyName: e.target.value}
                         )}
                     />
                     <MDBTextArea className="mb-3" style={{maxHeight: '200px'}} label='Descripción del Puesto' id='textAreaExample' rows={4} 
                         value={experience.positionDescription}  onChange={(e) => changeSomeJobExpirience(
-                            experience, {positionDescription: e.target.value}
+                            index, {positionDescription: e.target.value}
                         )}
                     />
                     <MDBRow>
                         <MDBCol>
                             <DataPicker max={new Date().toISOString().split('T')[0]} label='Fecha de Inicio' 
                                 value={experience.stardDate}  onChange={(e) => changeSomeJobExpirience(
-                                    experience, {stardDate: e.target.value}
+                                    index, {stardDate: e.target.value}
                                 )}
                             />
                         </MDBCol>
                         <MDBCol>
                             {experience.endDate && <DataPicker max={new Date().toISOString().split('T')[0]} label='Fecha de Fin'
                                 value={experience.endDate}  onChange={(e) => changeSomeJobExpirience(
-                                    experience, {endDate: e.target.value}
+                                    index, {endDate: e.target.value}
                                 )}
                             />}
                         </MDBCol>
@@ -61,7 +61,7 @@ export default function JobsForms() {
                                 let changedDate = e.target.checked 
                                     ? null
                                     : new Date().toISOString().split('T')[0]
-                                changeSomeJobExpirience(experience, {endDate: changedDate})
+                                changeSomeJobExpirience(index, {endDate: changedDate})
                             }}
                         />
                         </MDBCol>

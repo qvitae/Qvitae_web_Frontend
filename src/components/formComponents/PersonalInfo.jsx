@@ -70,7 +70,7 @@ export default function PersonalInfo({availableHobbies, isLoading, countries = [
                   <MDBSwitch 
                     id={`hobbySwitch${hobby.id}`}
                     label={hobby.name}
-                    checked={hobbies.find(userHobby => userHobby.hobbyId === hobby.id)}
+                    checked={hobbies.some(userHobby => userHobby.hobbyId === hobby.id)}
                     onChange={e => {
                       if (e.target.checked) {
                         formDataManager({type: actions.addHobby, hobbyId: hobby.id})
@@ -102,7 +102,7 @@ export default function PersonalInfo({availableHobbies, isLoading, countries = [
               </MDBCol>
               <MDBCol lg="4">
                 <DataPicker 
-                  value={birthDate} onChange={(e) => changeSomePersonalData({birthDate: e.target.value})}
+                  value={birthDate || new Date()} onChange={(e) => changeSomePersonalData({birthDate: e.target.value})}
                 />
               </MDBCol>
             </MDBRow>
@@ -139,7 +139,7 @@ export default function PersonalInfo({availableHobbies, isLoading, countries = [
               <MDBCol>  
                 <div className='fs-5'>Discapacidad</div>
                 <br />
-                <MDBSwitch id='flexSwitchCheckDefault' label={handicapped? 'No' : 'Sí'} value="No" onChange={toggleDisability}/>
+                <MDBSwitch id='flexSwitchCheckDefault' label={handicapped? 'No' : 'Sí'} value="No" checked={handicapped} onChange={toggleDisability}/>
               </MDBCol>
             </MDBRow>
             
