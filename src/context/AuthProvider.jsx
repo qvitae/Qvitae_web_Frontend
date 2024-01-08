@@ -1,6 +1,8 @@
 import { useState, useEffect, createContext } from "react";
 import { customFetch } from "../helpers/fetchers";
 
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext()
 
@@ -10,8 +12,25 @@ const AuthProvider = ({ children }) => {
     const [ loading, setLoading ] = useState(true)
     const [ auth, setAuth ] = useState({})
 
+    const navigate = useNavigate()
+
+
     useEffect(() => {
-        const authenticateUser = async () => {  
+        const authenticateUser = async () => {
+            const token = localStorage.getItem('qv_token')
+            
+            if(!token){
+                setLoading(false)
+                return 
+            }
+
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,                  
+              }
+            }
+
             try {
                 const url = `${import.meta.env.VITE_BACKEND_URL}/api/user`
                 const data = await customFetch(url)
@@ -26,7 +45,7 @@ const AuthProvider = ({ children }) => {
             setLoading(false)
         }
         authenticateUser()
-    },[])
+    },[navigate])
 
     const closeSesion = () => {
         localStorage.removeItem('qv_token') 

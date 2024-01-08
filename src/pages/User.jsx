@@ -28,7 +28,7 @@ export default function User() {
         </div>
         
         <div className="container mx-auto ">
-          <h2 className="">{auth.display_name}</h2>
+          <h2 className="">{auth.name} {auth.lastName}</h2>
           <br />
           <h3 className="mt-5">Ahora eres miembro de QVITAE! Llena tu CV</h3>
           <Link to={'/user/register-cv'} className='btn btn-secondary text-white rounded py-2 mt-3 fs-5 fw-bold' > 
