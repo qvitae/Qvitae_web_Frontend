@@ -2,16 +2,11 @@
 import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import Alerts from "../components/Alerts"
-// import '../main'
-import GoogleLogin from 'react-google-login'
-import { gapi } from 'gapi-script'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGoogle, faFacebook, faSnapchat } from '@fortawesome/free-brands-svg-icons'
-
+import clientAxios from "../helpers/axios"
 import useAuth from '../hooks/useAuth'
-import { jwtDecode } from "jwt-decode"
-import { customFetch } from "../helpers/fetchers"
 
 
 export default function Register() {
@@ -50,13 +45,12 @@ export default function Register() {
     setAlerta({})
 
     try {
-      const url = `${import.meta.env.VITE_BACKEND_URL}/api/register`;
-      const data = await customFetch(url, {method: 'POST', withToken: false} ,JSON.stringify({
+      const response = await clientAxios.post('/register', {
         "name": name,
         "lastName": lastName,
         "email": email,
         "password": password,
-      }))
+      })
       
       if (response.data){
         localStorage.setItem('qv_token', response.data)
@@ -64,7 +58,6 @@ export default function Register() {
       }
     
     } catch (error) {
-      console.log(error)
       setAlerta({
         msg: error.response.data.msg,
         error: true 

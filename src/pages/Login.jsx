@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import GoogleLogin from 'react-google-login'
 import { jwtDecode } from 'jwt-decode'
 import Alerts from '../components/Alerts'
-import GoogleLogin from 'react-google-login'
-import { gapi } from 'gapi-script'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGoogle, faFacebook, faSnapchat } from '@fortawesome/free-brands-svg-icons'
 
 import useAuth from '../hooks/useAuth'
-import { customFetch } from '../helpers/fetchers'
+import clientAxios from '../helpers/axios'
+// import { customFetch } from '../helpers/fetchers'
 
 
 export default function Login() {
@@ -84,8 +84,7 @@ export default function Login() {
     }
 
     try {
-      const url = `${import.meta.env.VITE_BACKEND_URL}/api/login`
-      const { data } = await axios.post(url, {email, password});
+      const { data } = await clientAxios.post('/login', {email, password});
       
       if(data){
         localStorage.setItem('qv_token', data)

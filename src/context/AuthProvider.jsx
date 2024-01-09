@@ -1,8 +1,7 @@
 import { useState, useEffect, createContext } from "react";
-import { customFetch } from "../helpers/fetchers";
 
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import clientAxios from "../helpers/axios";
 
 const AuthContext = createContext()
 
@@ -24,19 +23,11 @@ const AuthProvider = ({ children }) => {
                 return 
             }
 
-            const config = {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,                  
-              }
-            }
-
             try {
-                const url = `${import.meta.env.VITE_BACKEND_URL}/api/user`
-                const data = await customFetch(url)
-                setAuth(data)
-                console.log(data)
-            
+                
+                const response = await clientAxios.get('/user')
+                setAuth(response.data)
+                
             } catch (error) {
                 console.log(error.response.data.msg);
                 setAuth({});
