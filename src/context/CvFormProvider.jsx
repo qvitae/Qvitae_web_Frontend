@@ -1,8 +1,8 @@
-import React, {createContext, useEffect, useMemo, useReducer, useRef} from "react";
+import React, {createContext, useEffect, useReducer, useRef} from "react";
 import { MDBBtn } from "mdb-react-ui-kit";
 import { customFetch } from "../helpers/fetchers";
-import useAuth from "../hooks/useAuth";
 import { useDefaultUserFormData } from "../hooks/useFetchFormData";
+import v4 from "react-uuid";
 
 export const actions = {
     setName: 'set-name',
@@ -76,7 +76,11 @@ export const FormContext = createContext()
 
  
 export default function CVFormContext({children}) {
-    const idGenerator = useRef(0)
+
+    const debounceTimerRef = useRef(null),
+        sendData = useRef(false)
+
+
     function reducer(state, action) {
 
         switch (action.type) {
@@ -118,12 +122,12 @@ export default function CVFormContext({children}) {
                     state.softSkills.filter(skill => skill.softSkillId != action.skillId)}
             
             case actions.addNewLanguage:
-                return {...state, userLanguages: [...state.userLanguages, {}]}
+                return {...state, userLanguages: [...state.userLanguages, {id: v4()}]}
     
             case actions.updateLanguage:
-                const updatedLanguages = state.userLanguages.map((lang, index) => {
-                    if (index === action.id) {
-    
+                const updatedLanguages = state.userLanguages.map(lang => {
+                    if (lang.id === action.id) {
+                        console.log(action.id, lang.id)
                         return {...lang, ...action.values}
                     }
                     
@@ -135,17 +139,18 @@ export default function CVFormContext({children}) {
                         updatedLanguages
                 }
             case actions.removeLanguage:
-                return {...state, userLanguages: state.userLanguages.filter(lang => lang !== action.language)}
+                const filteredLanguages = state.userLanguages.filter(lang => lang.id !== action.id)
+                return {...state, userLanguages: filteredLanguages}
                     
             case actions.setCareer:
                 return {...state, career: {...state.career, ...action.values}}
             
             case actions.addNewJobsExperience:
-                return {...state, userJobsExperiences: [...state.userJobsExperiences, {}]}
+                return {...state, userJobsExperiences: [...state.userJobsExperiences, {id: v4()}]}
     
             case actions.setSomeJobsExperience:
-                let updatedExperiences = state.userJobsExperiences.map((exp, index) => {
-                    if (index == action.id) 
+                let updatedExperiences = state.userJobsExperiences.map((exp) => {
+                    if (exp.id == action.id) 
                         return {...exp, ...action.values}
     
     
@@ -156,26 +161,27 @@ export default function CVFormContext({children}) {
                     userJobsExperiences: updatedExperiences}
             
             case actions.removeJobsExperience:
-                return {...state, userJobsExperiences: state.userJobsExperiences.filter(userJob => userJob !== action.userJob)}
+                const filteredJobs = state.userJobsExperiences.filter(job => job.id != action.id)
+                return {...state, userJobsExperiences: filteredJobs}
             
             case actions.addNewReference:
-                return {...state, userReferences: [...state.userReferences, {}]}
+                return {...state, userReferences: [...state.userReferences, {id: v4()}]}
     
             case actions.setReference:
-                const updatedReferences = state.userReferences.map((ref, index) => {
-                    if (index == action.id) 
+                const updatedReferences = state.userReferences.map(ref => {
+                    if (ref.id == action.id) 
                         return {...ref, ...action.values}
     
                     return ref
                 })
-                console.log(updatedReferences)
                 return {...state, userReferences: updatedReferences}
     
             case actions.removeReference:
-                return {...state, userReferences: state.userReferences.filter(ref => ref != action.reference)}
+                const filteredRefs = state.userReferences.filter(ref => ref.id != action.id)
+                return {...state, userReferences: filteredRefs}
     
             case actions.addStudy:
-                return {...state, userStudies: [...state.userStudies, {eduactionGrade: action.eduactionGrade, id: idGenerator.current++}]}
+                return {...state, userStudies: [...state.userStudies, {eduactionGrade: action.eduactionGrade, id: v4()}]}
     
             case actions.setStudy:
                 const updatedStudies = state.userStudies.map(study => {
@@ -188,7 +194,8 @@ export default function CVFormContext({children}) {
                 return {...state, userStudies: updatedStudies}
     
             case actions.removeStudy:
-                return {...state, userStudies: state.userStudies.filter(study => study != action.study)}
+                const filteredStudies = state.userStudies.filter(study => study.id != action.id)
+                return {...state, userStudies: filteredStudies}
     
             case actions.setState:
                 return {...state, ...action.values}
@@ -202,11 +209,10 @@ export default function CVFormContext({children}) {
     
     useDefaultUserFormData(initialState, dispatch)
 
-
     async function handleSubmit(event) {
         event.preventDefault()
         try {
-            let response = await customFetch(`${import.meta.env.VITE_BACKEND_URL}/api/add-curriculum`, {method: 'POST'}, JSON.stringify(form))
+            let response = await customFetch(`${import.meta.env.VITE_BACKEND_URL}/api/add-curriculum?completeSave=true`, {method: 'POST'}, JSON.stringify(form))
             if (response.code == 200) {
                 
                 return console.log(response.message)
@@ -216,10 +222,33 @@ export default function CVFormContext({children}) {
             
         }
     }       
-   
+
+
+    useEffect(() => {
+        if (!sendData.current) return  
+        const debounce = () => {
+            clearTimeout(debounceTimerRef.current)
+
+
+            debounceTimerRef.current = setTimeout(async () => {
+                try {
+                    let data = await customFetch(`${import.meta.env.VITE_BACKEND_URL}/api/add-curriculum`, {method: 'POST'}, JSON.stringify(form))
+                    console.log(data)
+                    if (data.code == 200) {
+                        console.log(data.message)
+                    }
+                }catch (err) {
+                    console.log(err)
+                }
+            }, 1000*3)
+        }
+
+        debounce()
+    }, [form])
+
 
     return <FormContext.Provider value={{formState:form, formDataManager: dispatch}}>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} onChange={() => {sendData.current = true}}>
             {children}
             <div className='d-flex mt-2 justify-content-end'>
                 <MDBBtn onClick={handleSubmit} type='submit' className='w-100'>Enviar CV</MDBBtn>

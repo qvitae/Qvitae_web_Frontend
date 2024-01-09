@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { customFetch } from "../helpers/fetchers";
-import { actions } from "../context/CvFormProvider";
+import v4 from "react-uuid";
 
 
 // Function to map the data in case the data structure change on the future
@@ -93,7 +93,7 @@ export function useDefaultUserFormData(initialState, dispatch) {
                 
                 initialState.userJobsExperiences = curriculum.userJobsExperiences?.map(job => job) || []
 
-                initialState.userLanguages = curriculum.languages?.map(lang => lang.UserLanguage) || []
+                initialState.userLanguages = curriculum.languages?.map(lang => ({id: v4(), ...lang.UserLanguage})) || []
 
                 initialState.userReferences = curriculum.userReferences?.map(ref => ref) || []
 
@@ -102,7 +102,7 @@ export function useDefaultUserFormData(initialState, dispatch) {
                 
                 console.log(initialState)
             }
-            dispatch({type: actions.setState, values: initialState})
+            dispatch({type: 'set-state', values: initialState})
         }
         loadData()
     },[])
