@@ -1,7 +1,7 @@
 import React from "react";
-import { MDBAccordion, MDBAccordionItem, MDBRow, MDBCol, MDBFile, MDBInput, MDBSwitch,MDBTextArea,MDBTable, MDBCard, MDBCardBody, MDBBtn, MDBRadio } from 'mdb-react-ui-kit';
+import { MDBAccordion, MDBAccordionItem, MDBRow, MDBCol, MDBFile, MDBInput, MDBSwitch, MDBRadio } from 'mdb-react-ui-kit';
 
-import DataPicker from '../../components/DataPicker';
+import DataPicker from '../../components/DatePicker';
 import { actions } from "../../context/CvFormProvider";
 import { useFormData } from "../../hooks/useFormData";
 import AddressForm from "./AddressForm";

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import { MDBRow } from "mdb-react-ui-kit";
 import {actions } from "../../context/CvFormProvider";
 import { useFormData } from "../../hooks/useFormData";
@@ -21,14 +21,14 @@ export default function LanguagesForm({languages}) {
         <div className="px-2 pt-3 mb-3 w-100 d-flex" style={{overflowX: 'scroll'}}>
             {userLanguages?.map((userLanguage, index) => 
             <div className="p-4 mb-2 border rounded mx-1 position-relative" style={{minWidth: '250px'}} key={index}>
-                <Form.Select className="mb-2" value={userLanguage?.languageId} onChange={(e) => {updateLanguage(index, {...userLanguage, languageId: Number(e.target.value)})}}>
+                <Form.Select className="mb-2" value={userLanguage?.languageId} onChange={(e) => {updateLanguage(userLanguage.id, {languageId: Number(e.target.value)})}}>
                     <option > -- Selecciona un idioma -- </option>
                     {
                         languages?.map(lang => <option key={lang.id} value={lang.id}>{lang.name}</option>)
                     }
                 </Form.Select>
                 <Form.Select className="mb-2" value={userLanguage.languageLevel} onChange={(e) => {
-                    updateLanguage(index, {...userLanguage, languageLevel: e.target.value})
+                    updateLanguage(userLanguage.id, {languageLevel: e.target.value})
                 }}>
                     <option> -- Nivel de habilidad -- </option>
                     <option value="bajo"> Básico</option>
@@ -37,7 +37,7 @@ export default function LanguagesForm({languages}) {
                 </Form.Select>
                 {/* <span  > &times; </span> */}
                 <i onClick={() => {
-                    formDataManager({type:actions.removeLanguage, language: userLanguage})}} className="position-absolute end-0 top-0 close fw-bold icon bi-x-lg" style={{cursor:'pointer', fontSize: '1.2em'}} />
+                    formDataManager({type:actions.removeLanguage, id: userLanguage.id})}} className="position-absolute end-0 top-0 close fw-bold icon bi-x-lg" style={{cursor:'pointer', fontSize: '1.2em'}} />
             </div>)
             }
         </div>
@@ -51,4 +51,5 @@ export default function LanguagesForm({languages}) {
         </button>
         </div>
     </MDBRow>
+
 }

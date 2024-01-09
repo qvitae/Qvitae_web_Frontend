@@ -1,6 +1,6 @@
 import React from "react"
 import { MDBRow, MDBCol, MDBCard, MDBCardBody, MDBInput, MDBBtn } from "mdb-react-ui-kit"
-import DataPicker from "../DataPicker"
+import DatePicker from "../DatePicker"
 import {actions } from "../../context/CvFormProvider"
 import { useFormData } from "../../hooks/useFormData"
 
@@ -34,13 +34,14 @@ export default function StudyForm({gradeLevel = "superiorEducation", gradeIcon =
                                             />
                                         </MDBCol>
                                         <MDBCol lg="4" className='mb-3'>
-                                            <DataPicker 
+                                            <DatePicker 
                                             value={study.endDate} 
+                                            max={new Date()}
                                             onChange={(e) => {changeSomeStudy(study.id, {endDate: e.target.value})}}
                                             />
                                         </MDBCol>
                                     </MDBRow>
-                                    <MDBBtn onClick={() => formDataManager({type:actions.removeStudy, study})}> <i className="icon bi-trash"></i> </MDBBtn>
+                                    <MDBBtn className="col-12 bg-danger border-danger" onClick={() => formDataManager({type:actions.removeStudy, id: study.id})}> <i className="icon bi-trash"></i> </MDBBtn>
                                 </MDBCardBody> 
                             </MDBCard>
                         </div>

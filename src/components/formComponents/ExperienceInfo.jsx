@@ -6,6 +6,7 @@ import { useFormData } from "../../hooks/useFormData";
 import { Form } from "react-bootstrap";
 import LanguagesForm from "./languagesForm";
 import JobsForms from "./jobsForms";
+import NewCareerModal from "./newCareerModal";
 
 
 export default function ExperienceInfo({languages = [], careers = [], softSkills = [], isLoading = true}) {
@@ -19,8 +20,25 @@ export default function ExperienceInfo({languages = [], careers = [], softSkills
           formDataManager({type: actions.setPersonalData, personalData: {...personalData, personalDescription: value}})
         },
         changeSomeReference = (id, values) => {
-          formDataManager({type: actions.setReference, id, values: {...id, ...values}})
+          formDataManager({type: actions.setReference, id, values: {...values}})
         }
+      
+      // modal states
+      const [show, setShowstate] = useState(false),
+        handleClose = () => {
+          formDataManager({type: actions.setCareer, values: {name: ''}})
+          setShowstate(false)
+        },
+        handleSave = value => {
+          console.log(value)
+          formDataManager({type: actions.setCareer, values: {name: value}})
+          setAddedCareers([...addedCareers, value])
+          setShowstate(false)
+        },
+        handleOpenModal = () => setShowstate(true),
+        [addedCareers, setAddedCareers] = useState([])
+        
+
 
     return <MDBAccordion>
     <MDBAccordionItem collapseId={2} headerTitle={<><i className="icon bi-file-earmark-text text-primary" /> &nbsp; Experiencia laboral</>}>
@@ -68,14 +86,20 @@ export default function ExperienceInfo({languages = [], careers = [], softSkills
               <MDBRow className='mb-5'>
                 <MDBCol lg="4" className='mb-3'>
                   <Form.Select value={careerName} onChange={e => {
-                    formDataManager({type: actions.setCareer, values: {name: e.target.value}})
+                    if (e.target.value.trim() == 'otro') {
+                      handleOpenModal()
+                    }else {
+                      formDataManager({type: actions.setCareer, values: {name: e.target.value}})
+                    }
                   }}>
-                    <option>{ isLoading? 'Cargando...' : 'Profesión'} </option>
+                    <option value=''>{ isLoading? 'Cargando...' : 'Profesión'} </option>
                     {
                       careers?.map(career =>
                         <option key={career.id} value={career.name} >{career.name}</option>  
                       )
                     }
+                    {addedCareers.map(career => <option value={career}>{career}</option>)}
+                    <option value="otro"> Otro </option>
 
                   </Form.Select>
                 </MDBCol>
@@ -132,22 +156,22 @@ export default function ExperienceInfo({languages = [], careers = [], softSkills
                               <MDBCol className='mb-3 col-12'>
                                 <MDBInput label='Nombre y Apellido' type='text'
                                   value={reference.fullName}
-                                  onChange={(e) => {changeSomeReference(index, {fullName: e.target.value})}} />
+                                  onChange={(e) => {changeSomeReference(reference.id, {fullName: e.target.value})}} />
                               </MDBCol>
                               <MDBCol className='mb-3 col-12'>
                                 <MDBInput label='Teléfono' type='tel'
                                   value={reference.phoneNumber}
-                                  onChange={(e) => {changeSomeReference(index, {phoneNumber: e.target.value})}} />
+                                  onChange={(e) => {changeSomeReference(reference.id, {phoneNumber: e.target.value})}} />
                               </MDBCol>
                               <MDBCol className="col-12">
                                 <MDBInput label='Correo' type='email'
                                   value={reference.email}
-                                  onChange={(e) => {changeSomeReference(index, {email: e.target.value})}} />
+                                  onChange={(e) => {changeSomeReference(reference.id, {email: e.target.value})}} />
                               </MDBCol>
                               <MDBCol className="mx-auto mt-lg-0 col-6" lg="3">
                                 <MDBBtn onClick={(ev) => {
                                     ev.preventDefault()
-                                    formDataManager({type: actions.removeReference, reference})
+                                    formDataManager({type: actions.removeReference, id: reference.id})
                                   }} className="w-100 mt-2">
                                   <i className="icon bi-trash" ></i>
                                 </MDBBtn>
@@ -177,7 +201,8 @@ export default function ExperienceInfo({languages = [], careers = [], softSkills
           </MDBCol>
       </div>
     </div>
-    
+      
+      <NewCareerModal show={show} handleCancel={handleClose} handleSave={handleSave} />
       </MDBAccordionItem>
     </MDBAccordion>
 }

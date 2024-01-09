@@ -4,7 +4,7 @@ import { useFormData } from "../../hooks/useFormData"
 
 
 import { MDBBtn, MDBCard, MDBTable, MDBInput, MDBTextArea, MDBRow, MDBCol, MDBCardBody, MDBSwitch } from "mdb-react-ui-kit"
-import DataPicker from "../DataPicker"
+import DatePicker from "../DatePicker"
 
 
 
@@ -23,31 +23,31 @@ export default function JobsForms() {
                 {/* <MDBTable>   */}
                     <MDBInput className="mb-3" label='Posición' id='form1' type='text' 
                         value={experience?.position} onChange={(e) => changeSomeJobExpirience(
-                            index, {position: e.target.value}
+                            experience.id, {position: e.target.value}
                         )}
                     />
                     <MDBInput className="mb-3" label='Nombre de la Empresa' id='form1' type='text' 
                         value={experience?.companyName} onChange={(e) => changeSomeJobExpirience(
-                            index, {companyName: e.target.value}
+                            experience.id, {companyName: e.target.value}
                         )}
                     />
                     <MDBTextArea className="mb-3" style={{maxHeight: '200px'}} label='Descripción del Puesto' id='textAreaExample' rows={4} 
                         value={experience.positionDescription || ''}  onChange={(e) => changeSomeJobExpirience(
-                            index, {positionDescription: e.target.value}
+                            experience.id, {positionDescription: e.target.value}
                         )}
                     />
                     <MDBRow>
                         <MDBCol>
-                            <DataPicker max={new Date().toISOString().split('T')[0]} label='Fecha de Inicio' 
+                            <DatePicker max={new Date().toISOString().split('T')[0]} label='Fecha de Inicio' 
                                 value={experience.stardDate}  onChange={(e) => changeSomeJobExpirience(
-                                    index, {stardDate: e.target.value}
+                                    experience.id, {stardDate: e.target.value}
                                 )}
                             />
                         </MDBCol>
                         <MDBCol>
-                            {experience.endDate && <DataPicker max={new Date().toISOString().split('T')[0]} label='Fecha de Fin'
+                            {experience.endDate && <DatePicker max={new Date().toISOString().split('T')[0]} label='Fecha de Fin'
                                 value={experience.endDate}  onChange={(e) => changeSomeJobExpirience(
-                                    index, {endDate: e.target.value}
+                                    experience.id, {endDate: e.target.value}
                                 )}
                             />}
                         </MDBCol>
@@ -61,7 +61,7 @@ export default function JobsForms() {
                                 let changedDate = e.target.checked 
                                     ? null
                                     : new Date().toISOString().split('T')[0]
-                                changeSomeJobExpirience(index, {endDate: changedDate})
+                                changeSomeJobExpirience(experience.id, {endDate: changedDate})
                             }}
                         />
                         </MDBCol>
@@ -69,7 +69,7 @@ export default function JobsForms() {
                     <MDBCol>
                         <MDBBtn onClick={e => {
                             e.preventDefault()
-                            formDataManager({type: actions.removeJobsExperience, userJob: experience})
+                            formDataManager({type: actions.removeJobsExperience, id: experience.id})
                         } } className='ms-2'>
                             <i className="bg-transparent text-white icon bi-trash" ></i>
                         </MDBBtn>

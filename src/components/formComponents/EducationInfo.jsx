@@ -1,16 +1,11 @@
 import React from "react";
-import { MDBAccordion, MDBRow, MDBCol, MDBCard, MDBBtn, MDBAccordionItem, MDBInput, MDBIcon } from "mdb-react-ui-kit";
-import DataPicker from "../DataPicker";
+import { MDBAccordion, MDBRow, MDBCol, MDBAccordionItem } from "mdb-react-ui-kit";
 import { actions } from "../../context/CvFormProvider";
 import { useFormData } from "../../hooks/useFormData";
 import StudyForm from "./StudyForm";
 
 
 export default function EducationInfo() {
-
-    const {formState, formDataManager} = useFormData(),
-            {userStudies} = formState,
-            grade = userStudies.filter(study => true)
 
     return (
         <MDBAccordion>
